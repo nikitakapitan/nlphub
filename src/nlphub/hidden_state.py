@@ -2,18 +2,18 @@
 import torch
 import numpy as np
 
-def get_hidden_state(data_encoded, model, tokenizer):
+def get_hidden_state(data_encoded, model, tokenizer, device=None):
 
-    extract_hidden_state_model = lambda batch : extract_hidden_state(batch, model=model, tokenizer=tokenizer)
+    if device == None:
+      device = 'cpu'
+
+    extract_hidden_state_model = lambda batch : _extract_hidden_state(batch, model=model, tokenizer=tokenizer, device=device)
 
     data_encoded.set_format("torch")
     data_hidden = data_encoded.map(extract_hidden_state_model, batched=True)
     return data_hidden
 
-def extract_hidden_state(batch, model, tokenizer, device=None):
-
-  if device == None:
-    device = 'cpu'
+def _extract_hidden_state(batch, model, tokenizer, device):
 
   inputs = {k:v.to(device) for k,v in batch.items() if k in tokenizer.model_input_names}
 
