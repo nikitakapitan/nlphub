@@ -17,7 +17,7 @@ def output_distribution(dataset, train=True):
     df = data[:]
 
     def label_int2str(row):
-        return dataset_encoded['validation'].features["label"].int2str(row)
+        return data['validation'].features["label"].int2str(row)
     
     builder_name = data.builder_name
     df[builder_name] = data["label"].apply(label_int2str)

@@ -22,7 +22,7 @@ def error_analysis(dataset_encoded, model, device, tokenizer):
     dataset_encoded = deepcopy(dataset_encoded)
 
     def label_int2str(row):
-        return data.features["label"].int2str(row)
+        return dataset_encoded['train'].features["label"].int2str(row)
 
     _fwd_pass = lambda batch : _forward_pass_with_label(batch, model=model, device=device, tokenizer=tokenizer)
 
