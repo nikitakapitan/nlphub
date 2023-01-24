@@ -3,6 +3,7 @@ Optional file to compute some metrics for error analysis
 """
 
 import torch
+from copy import deepcopy
 
 
 def _forward_pass_with_label(batch, model, device, tokenizer):
@@ -18,18 +19,20 @@ def _forward_pass_with_label(batch, model, device, tokenizer):
 
 def error_analysis(dataset_encoded, model, device, tokenizer):
 
+    dataset_encoded = deepcopy(dataset_encoded)
+
     def label_int2str(row):
         return data.features["label"].int2str(row)
 
     _fwd_pass = lambda batch : _forward_pass_with_label(batch, model=model, device=device, tokenizer=tokenizer)
 
     dataset_encoded.set_format("torch")
-    data_encoded["validation"] = dataset_encoded["validation"].map(
+    dataset_encoded["validation"] = dataset_encoded["validation"].map(
         _fwd_pass, batched=True, batch_size=16)
 
-    data_encoded.set_format("pandas")
+    dataset_encoded.set_format("pandas")
     cols = ["text", "label", "predicted_label", "loss"]
-    df_valid= data_encoded["validation"][:][cols]
+    df_valid= dataset_encoded["validation"][:][cols]
     df_valid["label"] = df_valid["label"].apply(label_int2str)
     df_valid["predicted_label"] = (df_valid["predicted_label"]
                               .apply(label_int2str))

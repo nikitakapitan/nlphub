@@ -17,7 +17,7 @@ def output_distribution(dataset, train=True):
     df = data[:]
 
     def label_int2str(row):
-        return data.features["label"].int2str(row)
+        return dataset_encoded['validation'].features["label"].int2str(row)
     
     builder_name = data.builder_name
     df[builder_name] = data["label"].apply(label_int2str)
@@ -59,4 +59,12 @@ def plot_confusion_matrix(y_preds, y_true, labels):
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
     disp.plot(cmap="Blues", values_format=".2f", ax=ax, colorbar=False)
     plt.title("Normalized confusion matrix")
+    plt.show()
+
+
+def plt_bars(preds, labels):
+    preds_df = pd.DataFrame(preds[0])
+    plt.bar(labels, 100 * preds_df["score"], color='C0')
+    plt.title(f'"{custom_tweet}"')
+    plt.ylabel("Class probability (%)")
     plt.show()
