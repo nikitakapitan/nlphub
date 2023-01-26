@@ -65,6 +65,6 @@ def plot_confusion_matrix(y_preds, y_true, labels):
 def plt_bars(preds, labels, title):
     preds_df = pd.DataFrame(preds[0])
     plt.bar(labels, 100 * preds_df["score"], color='C0')
-    plt.title(f'"{custom_tweet}"')
+    plt.title(f'"{title}"')
     plt.ylabel("Class probability (%)")
     plt.show()
