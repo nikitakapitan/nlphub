@@ -5,9 +5,9 @@ This is NLP Hub, where I use Hugging Face API to build my projects
 
 ---
 
-<img align='right' src='/docs/review1.png'>
+<img align='right' src='/docs/review1.png' width='300'>
 
-** Project 1 : Review classification by emotion **
+**Project 1 : Reviews classification by emotions**
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nikitakapitan/nlphub/blob/master/notebooks/BERT_emotions.ipynb)
 
