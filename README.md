@@ -9,6 +9,8 @@ This is NLP Hub, where I use Hugging Face API to build my projects
 
 ** Project 1 : Review classification by emotion **
 
+![Open In Colab]('')
+
 - Dataset : transformers.dataset('emotion')
 - Architecture : BERT (Transformer)
 - Method : Fine-tunning
