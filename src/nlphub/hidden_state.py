@@ -20,7 +20,7 @@ def _extract_hidden_state(batch, model, tokenizer, device):
   with torch.no_grad():
     last_hidden_state = model(**inputs).last_hidden_state
 
-  # return THE FIRST token aka [CLS]
+  # return THE FIRST token aka. [CLS]
   return {"hidden_state" : last_hidden_state[:,0].cpu().numpy()}
 
   
