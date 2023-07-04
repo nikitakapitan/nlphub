@@ -1,0 +1,8 @@
+jupyter
+autotime
+datasets
+huggingface_hub
+transformers
+sklearn
+numpy
+umap-learn
