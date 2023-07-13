@@ -1,16 +1,7 @@
-## NLP Hub
+## BERT mini-projects
 
-
-This is NLP Hub, where I use Hugging Face API to build my projects
+Here is a vanilla BERT usage powered by Hugging Face API.
 
 ---
 
-<img align='right' src='/docs/review1.png' width='300'>
 
-**Project 1 : Reviews classification by emotions**
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nikitakapitan/nlphub/blob/master/notebooks/BERT_emotions.ipynb)
-
-- Dataset : transformers.dataset('emotion')
-- Architecture : BERT (Transformer)
-- Method : Fine-tunning

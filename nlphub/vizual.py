@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from copy import deepcopy
 
-from hidden_state import prepare_data
+from nlphub.hidden_state import prepare_data
 
 
 def output_distribution(dataset, train=True):
