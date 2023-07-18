@@ -52,3 +52,4 @@ MANIFEST
 .venv*/
 .conda*/
 .python-version
+BERT/[NER]XLM-RoBERTa/xlm-roberta-base-finetuned-panx-de
