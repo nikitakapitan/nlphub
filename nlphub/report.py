@@ -28,7 +28,7 @@ task_to_benchmark = {
 def generate_report(task='classification'):
 
     models = ['bert-base-uncased']
-    datasets = ['clinc']
+    datasets = ['clinc', 'emotions']
 
     report = {}
     

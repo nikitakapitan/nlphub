@@ -1,20 +1,21 @@
 from abc import ABC, abstractclassmethod
 from datasets import load_metric
 import transformers
-import datasets
 import numpy as np
 import torch
 from time import perf_counter
 from pathlib import Path
 
+""" This is TASK-Agnostic Base class.
+"""
+
 class PerformanceBenchmark:
-    def __init__(self, pipeline, dataset, config):
+    def __init__(self, pipeline, config):
         assert isinstance(pipeline, transformers.Pipeline)
-        assert isinstance(dataset, datasets.Dataset)
 
         self.pipeline = pipeline
-        self.dataset = dataset
         self.optim_type = config['optim_type']
+
 
         for metric in config['metrics']:
             if metric == 'accuracy':
@@ -22,18 +23,20 @@ class PerformanceBenchmark:
             else:
                 raise ValueError(f'Metric {metric} is not yet supported')
                 
+    @abstractclassmethod
+    def compute_performance(self, dataset) -> dict:
+        """Abstract method.
 
-    def compute_performance(self) -> dict:
-        # prepare preds & labels
+        Example:
         preds, labels = [], []
         for example in self.dataset:
-            pred = self.pipeline(example['text'])
-
-            preds.append(intents.str2int(pred['label']))
-            labels.append(example['intent'])
+            preds.append(self.pipeline(example['input']))
+            labels.append(example['label'])
 
         score = self.metric.compute(predictions=preds, references=labels)
-        return {self.metric : score}
+        return {self.metric.name : score}
+        """
+        pass
 
     def compute_size(self) -> dict:
         state_dict = self.pipeline.model.state_dict()
@@ -45,7 +48,7 @@ class PerformanceBenchmark:
         return {'size_mb' : size_mb}
 
 
-    def time_pipeline(self) -> dict:
+    def compute_time(self) -> dict:
         latencies = []
         for _ in range(100):
             start = perf_counter()
@@ -58,7 +61,14 @@ class PerformanceBenchmark:
 
     def run_benchmark(self):
         metrics = {}
-        metrics[self.optim_type] = self.compute_size()
-        metrics[self.optim_type].update(self.time_pipeline())
-        metrics[self.optim_type].update(self.compute_accuracy())
+        metrics[self.optim_type] = {
+            **self.compute_size(),
+            **self.compute_time(),
+            **self.compute_performance(),
+        }
+
         return metrics
+    
+
+# prepare preds & labels
+        
