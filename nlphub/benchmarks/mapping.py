@@ -1,8 +1,8 @@
 from transformers import (
-    AutoModelForAudioClassification,
+    AutoModelForSequenceClassification,
 
 )
 
 task_to_auto_model = {
-    'text-classification' : AutoModelForAudioClassification,
+    'text-classification' : AutoModelForSequenceClassification,
 }

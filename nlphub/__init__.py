@@ -1,4 +1,4 @@
-from .PerformanceBenchmark import PerformanceBenchmark
+from .benchmarks.PerformanceBenchmark import PerformanceBenchmark
 
 
-from .models.BERTClassificationBenchmark import BERTClassificationBenchmark
+from .benchmarks.tasks.ClassificationBenchmark import ClassificationBenchmark
