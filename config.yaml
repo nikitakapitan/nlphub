@@ -1,0 +1,16 @@
+TASK: text-classification
+DATASET_NAME: emotion
+DATASET_CONFIG_NAME: null
+EVAL_DATASET: test # default should be 'validation'
+BASE_MODEL_NAME: bert-base-uncased
+METRIC_NAMES:
+  - name: "accuracy"
+    args: {}
+  - name: "f1"
+    args: 
+      average: "weighted"
+BATCH_SIZE: 16
+NUM_EPOCHS: 3
+LEARNING_RATE: 0.00002
+LOG_LEVEL: error
+HF_TOKEN: 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
