@@ -12,7 +12,7 @@ import datasets
 from datasets import load_dataset
 from transformers import AutoTokenizer, TrainingArguments, Trainer
 import evaluate
-from nlphub.benchmarks.mapping import task_to_benchmark, task_to_auto_model
+from nlphub.benchmarks.mapping import task_to_auto_model
 
 # Initialize logging
 logging.basicConfig(filename=f"logs/train_{time.strftime('%Y-%m-%d_%H-%M-%S')}.log", level=logging.INFO)
