@@ -1,7 +1,12 @@
 # python train.py --config config.yaml
 
-# requirements:
-# !pip install datasets transformers evaluate
+# Colab:
+# !pip install datasets transformers evaluate accelerate
+# import os
+# os.chdir('/content/my_repo')
+# from huggingface_hub import notebook_login
+# notebook_login()
+ 
 import os
 import yaml
 import argparse
@@ -15,6 +20,8 @@ import evaluate
 from nlphub.benchmarks.mapping import task_to_auto_model
 
 # Initialize logging
+if not os.path.exists('/content/logs/'):
+    os.makedirs('/content/logs/')
 logging.basicConfig(filename=f"logs/train_{time.strftime('%Y-%m-%d_%H-%M-%S')}.log", level=logging.INFO)
 
 
@@ -136,6 +143,7 @@ def main(args):
 
     # Train and Evaluate
     try:
+        print("Start TRAINING")
         trainer.train()
         trainer.evaluate()
     except Exception as e:
@@ -144,6 +152,7 @@ def main(args):
 
     # Push to Hub
     try:
+        print("PUSH MODEL TO THE HUB")
         trainer.push_to_hub()
         logging.info("Model pushed to Hugging Face Hub.")
     except Exception as e:

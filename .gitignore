@@ -10,6 +10,7 @@
 # Only allow .ipynb files in notebooks and its subdirectories
 /notebooks/*
 !/notebooks/**/*.ipynb
+01.ipynb
 
 # Package files
 *.egg
