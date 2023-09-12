@@ -1,0 +1,14 @@
+TASK: text-classification
+MODEL_NAMES:
+  - bert-base-uncased
+  - distilbert-base-uncased
+DATASET_NAMES:
+  - imdb
+  - yelp_polarity
+  - emotions
+METRIC_NAMES:
+  - name: accuracy
+    args: {}
+  - name: f1
+    args: 
+      average: weighted

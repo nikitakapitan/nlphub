@@ -2,7 +2,7 @@ TASK: text-classification
 DATASET_NAME: imdb
 DATASET_CONFIG_NAME: null
 EVAL_DATASET: test # default should be 'validation'
-BASE_MODEL_NAME: distilbert-base-uncased
+BASE_MODEL_NAME: bert-base-uncased
 METRIC_NAMES:
   - name: "accuracy"
     args: {}

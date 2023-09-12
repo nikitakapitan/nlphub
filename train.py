@@ -18,28 +18,12 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, TrainingArguments, Trainer
 import evaluate
 from nlphub.benchmarks.mapping import task_to_auto_model
+from nlphub.utils import rename_dataset_label_key, get_dataset_num_classes
 
 # Initialize logging
 if not os.path.exists('/content/logs/'):
     os.makedirs('/content/logs/')
 logging.basicConfig(filename=f"logs/train_{time.strftime('%Y-%m-%d_%H-%M-%S')}.log", level=logging.INFO)
-
-
-def rename_dataset_label_key(dataset):
-    for key, feature in dataset['train'].features.items():
-        if isinstance(feature, datasets.ClassLabel):
-            current_key = key
-    if current_key != 'label':
-        for split in dataset.keys():
-            dataset[split] = dataset[split].rename_column(current_key, 'label')
-
-
-def get_dataset_num_classes(features):
-    "Extract num_classes from provided dataset"
-    for key, feature in features.items():
-        if hasattr(feature, 'num_classes'):
-            return features[key].num_classes
-    raise ValueError("Could not find a suitable label key with num_classes in the dataset features ")
 
 
 def main(args):

@@ -15,6 +15,7 @@ class PerformanceBenchmark:
 
         self.pipeline = pipeline
         self.optim_type = config['optim_type']
+        self.dataset = None # be initialized with child classes
 
 
         for metric in config['metrics']:
@@ -64,7 +65,7 @@ class PerformanceBenchmark:
         metrics[self.optim_type] = {
             **self.compute_size(),
             **self.compute_time(),
-            **self.compute_performance(),
+            **self.compute_performance(self.dataset),
         }
 
         return metrics
