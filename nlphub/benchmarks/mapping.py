@@ -1,5 +1,5 @@
 
-from nlphub.benchmarks.tasks import (
+from nlphub.benchmarks.tasks.ClassificationBenchmark import (
     ClassificationBenchmark
 )
 

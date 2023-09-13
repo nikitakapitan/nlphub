@@ -9,8 +9,8 @@ from nlphub.utils import rename_dataset_label_key
 
 class ClassificationBenchmark(PerformanceBenchmark):
 
-    def __init__(self, pipeline, dataset):
-        super().__init__(pipeline, dataset)
+    def __init__(self, pipeline, dataset, metric_names):
+        super().__init__(pipeline, metric_names)
 
         # parse the label regex from data set (ex. 'label')
         self._label = list(dataset.features.keys())[1]
@@ -32,5 +32,7 @@ class ClassificationBenchmark(PerformanceBenchmark):
             preds.append(pred_int)
             labels.append(example['label'])
 
-        score = self.metric.compute(predictions=preds, references=labels)
-        return {self.metric : score}
+        metrics = {}
+        for metric in self.metrics:
+            metrics[metric.name] = metric.compute(predictions=preds, references=labels)
+        return metrics

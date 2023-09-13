@@ -29,10 +29,12 @@ def main(config_path):
         report = {}
 
         for dataset_name in config['DATASET_NAMES']:
+            logging.info(f"Loading {dataset_name} dataset ...")
             dataset = load_dataset(dataset_name, split='test')
 
             for model_name in config['MODEL_NAMES']:
                 ft_model = task_model_dataset_to_ft_model[config['TASK']][model_name][dataset_name]
+                logging.info(f"Loading {ft_model} pipeline ...")
                 pipe = pipeline(config['TASK'], model=ft_model) 
 
                 BenchmarkClass = task_to_benchmark[config['TASK']]
