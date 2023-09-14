@@ -38,7 +38,7 @@ def main(config_path):
                 pipe = pipeline(config['TASK'], model=ft_model) 
 
                 BenchmarkClass = task_to_benchmark[config['TASK']]
-                benchmark = BenchmarkClass(pipe, dataset)
+                benchmark = BenchmarkClass(pipe, dataset, config['METRICS'])
                 metrics = benchmark.run_benchmark()
 
                 if dataset_name not in report:

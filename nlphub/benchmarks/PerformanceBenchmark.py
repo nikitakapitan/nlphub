@@ -1,5 +1,6 @@
 from abc import ABC, abstractclassmethod
 from datasets import load_metric
+import evaluate
 import transformers
 import numpy as np
 import torch
@@ -9,14 +10,28 @@ from pathlib import Path
 """ This is TASK-Agnostic Base class.
 """
 
-class PerformanceBenchmark:
-    def __init__(self, pipeline, metric_names):
+class PerformanceBenchmark(ABC):
+    def __init__(self, pipeline, metric_cfgs):
+        """
+        pipeline = transformers.pipeline('task', 'model')
+        metrics = [ {'name': 'accuracy', 'args': {}},
+                    {'name': 'f1',       'args': {'average': 'weighted'}}]
+        """
         assert isinstance(pipeline, transformers.Pipeline)
-
         self.pipeline = pipeline
-        self.dataset = None # task specific
-        self.metrics = [load_metric(name) for name in metric_names]
-                
+
+        self._prepare_metrics(metric_cfgs)
+
+        
+    def _prepare_metrics(self, metric_cfgs):
+        self.metric_funcs = {}
+        for metric_cfg in metric_cfgs:
+            metric_name = metric_cfg['name']
+            metric_args = metric_cfg.get('args', {})
+            self.metric_funcs[metric_name] = {
+                'func': evaluate.load(metric_name),
+                'args': metric_args         }
+
     @abstractclassmethod
     def compute_performance(self, dataset) -> dict:
         """Abstract method.
@@ -57,7 +72,7 @@ class PerformanceBenchmark:
         metrics = {
             **self.compute_size(),
             **self.compute_time(),
-            **self.compute_performance(self.dataset, self.metrics),
+            **self.compute_performance(),
         }
 
         return metrics

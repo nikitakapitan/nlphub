@@ -47,7 +47,8 @@ def main(args):
     try:
         dataset_config_name = config.get('DATASET_CONFIG_NAME') # can be None
         dataset = load_dataset(config['DATASET_NAME'], dataset_config_name)
-        rename_dataset_label_key(dataset)
+        for split in dataset:
+            rename_dataset_label_key(dataset[split])
         logging.info(f"Dataset {config['DATASET_NAME']} loaded.")
     except Exception as e:
         logging.error(f"Error loading dataset: {e}")
@@ -75,12 +76,12 @@ def main(args):
         exit(1)
 
     # Load metrics
-    metrics = {}
+    metric_funcs = {}
     for metric_config in config['METRIC_NAMES']:
         metric_name = metric_config['name']
         metric_args = metric_config.get('args', {})
         try:
-            metrics[metric_name] = {
+            metric_funcs[metric_name] = {
                 'func': evaluate.load(metric_name),
                 'args': metric_args
                 }
@@ -92,13 +93,13 @@ def main(args):
         logits, labels = eval_pred
         preds = logits.argmax(axis=-1)
 
-        results = {}
-        for metric_name, metric_detail in metrics.items():
+        metrics = {}
+        for metric_name, metric_detail in metric_funcs.items():
             metric_func = metric_detail['func']
             metric_args = metric_detail['args']
-            results[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
+            metrics[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
             
-        return results
+        return metrics
 
 
     # Training Arguments

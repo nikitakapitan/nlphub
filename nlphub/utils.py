@@ -2,7 +2,7 @@ import datasets
 
 def rename_dataset_label_key(dataset) -> None:
     "rename any dataset key ('intent', 'answer' etc) to 'label"
-    for key, feature in dataset['train'].features.items():
+    for key, feature in dataset.features.items():
         if isinstance(feature, datasets.ClassLabel):
             current_key = key
     if current_key != 'label':

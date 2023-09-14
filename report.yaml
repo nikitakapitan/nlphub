@@ -4,9 +4,8 @@ MODEL_NAMES:
   - distilbert-base-uncased
 DATASET_NAMES:
   - imdb
-  - yelp_polarity
-  - emotions
-METRIC_NAMES:
+  - emotion
+METRICS:
   - name: accuracy
     args: {}
   - name: f1
