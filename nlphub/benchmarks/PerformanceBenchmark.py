@@ -58,6 +58,10 @@ class PerformanceBenchmark(ABC):
 
 
     def compute_time(self) -> dict:
+        # warm-up
+        for _ in range(10):
+            _ = self.pipeline(self.dataset[0]['text'])
+
         latencies = []
         for _ in range(100):
             start = perf_counter()
