@@ -12,12 +12,12 @@ task_to_benchmark = {
 task_model_dataset_to_ft_model = {
     'text-classification'  : {
         'bert-base-uncased' : {
-            'clinc' : "transfromersbook/bert-base-uncased-finetuned-clinc",
+            'clinc_oos' : "transfromersbook/bert-base-uncased-finetuned-clinc",
             'emotion' : "nikitakapitan/bert-base-uncased-finetuned-emotion",
             'imdb' : "nikitakapitan/bert-base-uncased-finetuned-imdb",
         },
         'distilbert-base-uncased' : {
-            'clinc' : "nikitakapitan/distilbert-base-uncased-finetuned-clinc_oos",
+            'clinc_oos' : "nikitakapitan/distilbert-base-uncased-finetuned-clinc_oos",
             'emotion' : "nikitakapitan/distilbert-base-uncased-finetuned-emotion", 
             'imdb' : "nikitakapitan/distilbert-base-uncased-finetuned-imdb",
         }

@@ -33,7 +33,8 @@ def main(config_path):
 
         for dataset_name in config['DATASET_NAMES']:
             logging.info(f"Loading {dataset_name} dataset ...")
-            dataset = load_dataset(dataset_name, split='test')
+            if dataset_name == 'clinc_oos':
+                dataset = load_dataset(dataset_name, 'plus', split='test')
 
             for model_name in config['MODEL_NAMES']:
                 ft_model = task_model_dataset_to_ft_model[config['TASK']][model_name][dataset_name]
@@ -49,6 +50,7 @@ def main(config_path):
                 if dataset_name not in report:
                     report[dataset_name] = {}
                 report[dataset_name][model_name] = metrics
+                report[dataset_name]['hf_model'] = ft_model
 
     logging.info(f"Benchmark Report: {report}")
 

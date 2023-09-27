@@ -1,0 +1,13 @@
+Launch report.py on google colab.
+
+***Set up***
+
+Turn ON GPU
+!git clone https://github.com/nikitakapitan/nlphub.git
+!mv nlphub/report.yaml .
+!mkdir logs
+!pip install datasets transformers evaluate accelerate 
+!python nlphub/report.py --config report.yaml
+
+# Results:
+As of 27Sep23 report info will be stored isnide the logs.
