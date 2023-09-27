@@ -12,7 +12,7 @@ task_to_benchmark = {
 task_model_dataset_to_ft_model = {
     'text-classification'  : {
         'bert-base-uncased' : {
-            'clinc_oos' : "transfromersbook/bert-base-uncased-finetuned-clinc",
+            'clinc_oos' : "transformersbook/bert-base-uncased-finetuned-clinc",
             'emotion' : "nikitakapitan/bert-base-uncased-finetuned-emotion",
             'imdb' : "nikitakapitan/bert-base-uncased-finetuned-imdb",
         },

@@ -1,13 +1,13 @@
 import datasets
 
-def rename_dataset_label_key(dataset) -> None:
-    "rename any dataset key ('intent', 'answer' etc) to 'label"
+def rename_split_label_key(dataset) -> None:
+    "dataset : transformers.Dataset (ex. dataset=DatasetDict['test'])"
+    "rename given dataset split key ('intent', 'answer' etc) to 'label"
     for key, feature in dataset.features.items():
         if isinstance(feature, datasets.ClassLabel):
             current_key = key
     if current_key != 'label':
-        for split in dataset.keys():
-            dataset[split] = dataset[split].rename_column(current_key, 'label')
+        dataset = dataset.rename_column(current_key, 'label')
 
 
 def get_dataset_num_classes(features) -> int:

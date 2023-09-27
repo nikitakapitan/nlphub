@@ -5,6 +5,7 @@ MODEL_NAMES:
 DATASET_NAMES:
   - imdb
   - emotion
+  - clinc_oos
 METRICS:
   - name: accuracy
     args: {}

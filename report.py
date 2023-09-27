@@ -33,8 +33,7 @@ def main(config_path):
 
         for dataset_name in config['DATASET_NAMES']:
             logging.info(f"Loading {dataset_name} dataset ...")
-            if dataset_name == 'clinc_oos':
-                dataset = load_dataset(dataset_name, 'plus', split='test')
+            dataset = load_dataset(dataset_name, split='test')
 
             for model_name in config['MODEL_NAMES']:
                 ft_model = task_model_dataset_to_ft_model[config['TASK']][model_name][dataset_name]

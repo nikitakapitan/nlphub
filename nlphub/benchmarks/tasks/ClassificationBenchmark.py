@@ -1,6 +1,6 @@
 from nlphub import PerformanceBenchmark
 import datasets
-from nlphub.utils import rename_dataset_label_key
+from nlphub.utils import rename_split_label_key
 
 """The MODELBenchmark:
 1. measure time, memory and the performance on input dataset.
@@ -15,7 +15,7 @@ class ClassificationBenchmark(PerformanceBenchmark):
         assert isinstance(dataset, datasets.Dataset), \
         f'dataset is not of type datasets.Dataset but {type(dataset)}'
         self.dataset = dataset
-        rename_dataset_label_key(dataset)
+        rename_split_label_key(dataset)
         assert 'text' in dataset.features and 'label' in dataset.features, \
         f"dataset doesn't contain 'text' or 'label' but {dataset.features.keys()}"
         
