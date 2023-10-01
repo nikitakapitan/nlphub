@@ -1,4 +1,4 @@
-# python train.py --config config.yaml
+# python train.py --config train.yaml
 
 # Colab:
 # !pip install datasets transformers evaluate accelerate
@@ -13,7 +13,6 @@ import argparse
 import logging
 import time
 
-import datasets
 from datasets import load_dataset
 from transformers import AutoTokenizer, TrainingArguments, Trainer
 import evaluate
@@ -54,7 +53,7 @@ def main(args):
         logging.error(f"Error loading dataset: {e}")
         exit(1)
 
-    # Tokenization
+    # INIT Tokenization
     try:
         tokenizer = AutoTokenizer.from_pretrained(config['BASE_MODEL_NAME'])
         logging.info(f"Tokenizer for {config['BASE_MODEL_NAME']} initialized.")
@@ -65,7 +64,7 @@ def main(args):
     tokenize = lambda batch: tokenizer(batch['text'], truncation=True)
     dataset_encoded = dataset.map(tokenize, batched=True)
 
-    # Model Initialization
+    # INIT Model 
     try:
         num_classes = get_dataset_num_classes(dataset['train'].features)
         model = AutoModelClass.from_pretrained(config['BASE_MODEL_NAME'], num_labels=num_classes)
@@ -75,7 +74,7 @@ def main(args):
         print(f"Error initializing model: {e}")
         exit(1)
 
-    # Load metrics
+    # LOAD metrics
     metric_funcs = {}
     for metric_config in config['METRIC_NAMES']:
         metric_name = metric_config['name']

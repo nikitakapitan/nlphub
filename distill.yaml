@@ -1,0 +1,8 @@
+TASK: text-classification
+TEACHER: transformersbook/bert-base-uncased-finetuned-clinc
+STUDENT: distilbert-base-uncased
+DATASET_NAMES:
+  - imdb
+  - emotion
+  - clinc_oos
+BATCH_SIZE: 48
