@@ -8,6 +8,7 @@ def rename_split_label_key(dataset) -> None:
             current_key = key
     if current_key != 'label':
         dataset = dataset.rename_column(current_key, 'label')
+    return dataset
 
 
 def get_dataset_num_classes(features) -> int:
