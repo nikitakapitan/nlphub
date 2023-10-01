@@ -1,11 +1,11 @@
-# python train.py --config train.yaml
-
 # Colab:
-# !pip install datasets transformers evaluate accelerate
-# import os
-# os.chdir('/content/my_repo')
-# from huggingface_hub import notebook_login
-# notebook_login()
+# Turn ON GPU
+# !git clone https://github.com/nikitakapitan/nlphub.git
+# !mv nlphub/train.yaml .
+# !mkdir logs
+# !pip install datasets transformers evaluate accelerate 
+
+# python train.py --config train.yaml
  
 import os
 import yaml
@@ -15,15 +15,18 @@ import time
 
 from datasets import load_dataset
 from transformers import AutoTokenizer, TrainingArguments, Trainer
+from transformers import AutoModelForSequenceClassification
 import evaluate
-from nlphub.benchmarks.mapping import task_to_auto_model
-from nlphub.utils import rename_dataset_label_key, get_dataset_num_classes
+from nlphub.utils import rename_split_label_key, get_dataset_num_classes
 
 # Initialize logging
 if not os.path.exists('/content/logs/'):
     os.makedirs('/content/logs/')
 logging.basicConfig(filename=f"logs/train_{time.strftime('%Y-%m-%d_%H-%M-%S')}.log", level=logging.INFO)
 
+task_to_auto_model = {
+    'text-classification' : AutoModelForSequenceClassification
+}
 
 def main(args):
 
@@ -47,7 +50,7 @@ def main(args):
         dataset_config_name = config.get('DATASET_CONFIG_NAME') # can be None
         dataset = load_dataset(config['DATASET_NAME'], dataset_config_name)
         for split in dataset:
-            rename_dataset_label_key(dataset[split])
+            dataset[split] = rename_split_label_key(dataset[split])
         logging.info(f"Dataset {config['DATASET_NAME']} loaded.")
     except Exception as e:
         logging.error(f"Error loading dataset: {e}")
