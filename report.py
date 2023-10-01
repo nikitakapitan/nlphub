@@ -2,6 +2,7 @@
 
 import os
 import yaml
+import json
 import argparse
 import logging
 import time
@@ -49,7 +50,12 @@ def main(config_path):
                 if dataset_name not in report:
                     report[dataset_name] = {}
                 report[dataset_name][model_name] = metrics
-                report[dataset_name]['hf_model'] = ft_model
+
+                with open('results.json', 'w') as f:
+                    results = {}
+                    results['report'] = report
+                    results['meta'] = {'hf_model': ft_model}
+                    yaml.dump(results, f, indent=4)
 
     logging.info(f"Benchmark Report: {report}")
 

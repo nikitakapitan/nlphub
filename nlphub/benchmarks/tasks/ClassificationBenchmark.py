@@ -14,8 +14,8 @@ class ClassificationBenchmark(PerformanceBenchmark):
          
         assert isinstance(dataset, datasets.Dataset), \
         f'dataset is not of type datasets.Dataset but {type(dataset)}'
-        self.dataset = dataset
         dataset = rename_split_label_key(dataset)
+        self.dataset = dataset
         assert 'text' in dataset.features and 'label' in dataset.features, \
         f"dataset doesn't contain 'text' or 'label' but {dataset.features.keys()}"
         
