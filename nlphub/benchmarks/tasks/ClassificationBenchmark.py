@@ -1,6 +1,7 @@
 from nlphub import PerformanceBenchmark
 import datasets
 from nlphub.utils import rename_split_label_key
+import logging
 
 """The MODELBenchmark:
 1. measure time, memory and the performance on input dataset.
@@ -36,5 +37,6 @@ class ClassificationBenchmark(PerformanceBenchmark):
             metric_func = metric_detail['func']
             metric_args = metric_detail['args']
             metrics[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
-            
+
+        logging.info(f"Metrics: {metrics}")    
         return metrics

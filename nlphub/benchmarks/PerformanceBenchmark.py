@@ -1,11 +1,11 @@
 from abc import ABC, abstractclassmethod
-from datasets import load_metric
 import evaluate
 import transformers
 import numpy as np
 import torch
 from time import perf_counter
 from pathlib import Path
+import logging
 
 """ This is TASK-Agnostic Base class.
 """
@@ -54,6 +54,7 @@ class PerformanceBenchmark(ABC):
         size_mb = Path(tmp).stat().st_size / (1024 * 1024)
         tmp.unlink()
         print(f"Model size (MB) - {size_mb:.2f}")
+        logging.info(f"Model size (MB) - {size_mb:.2f}")
         return {'size_mb' : size_mb}
 
 
@@ -70,6 +71,7 @@ class PerformanceBenchmark(ABC):
         time_avg_ms = 1_000 * np.mean(latencies)
         time_std_ms = 1_000 * np.std(latencies)
         print(f"Average latency (ms) - {time_avg_ms:.2f} +\- {time_std_ms:.2f}")
+        logging.info(f"Average latency (ms) - {time_avg_ms:.2f} +\- {time_std_ms:.2f}")
         return {'time_avg_ms' : time_avg_ms, 'time_std_ms' : time_std_ms}
 
     def run_benchmark(self):

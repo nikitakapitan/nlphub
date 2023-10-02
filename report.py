@@ -27,35 +27,35 @@ def main(config_path):
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
 
-        logging.info("Input Configurations:")
-        logging.info(yaml.dump(config))
+    logging.info("Input Configurations:")
+    logging.info(yaml.dump(config))
 
-        report = {}
+    report = {}
 
-        for dataset_name in config['DATASET_NAMES']:
-            logging.info(f"Loading {dataset_name} dataset ...")
-            dataset = load_dataset(dataset_name, split='test')
+    for dataset_name in config['DATASET_NAMES']:
+        logging.info(f"Loading {dataset_name} dataset ...")
+        dataset = load_dataset(dataset_name, split='test')
 
-            for model_name in config['MODEL_NAMES']:
-                ft_model = task_model_dataset_to_ft_model[config['TASK']][model_name][dataset_name]
-                logging.info(f"Loading {ft_model} pipeline ...")
-                pipe = pipeline(config['TASK'], model=ft_model, truncation=True, device=0) 
-                # truncation : crop input text to model max_length
-                # device=0 : first available GPU
+        for model_name in config['MODEL_NAMES']:
+            logging.info(f"Loading {model_name} pipeline ...")
 
-                BenchmarkClass = task_to_benchmark[config['TASK']]
-                benchmark = BenchmarkClass(pipe, dataset, config['METRICS'])
-                metrics = benchmark.run_benchmark()
+            # truncation : crop input text to model max_length | device=0 : first available GPU
+            pipe = pipeline(config['TASK'], model=model_name, truncation=True, device=0) 
+            
 
-                if dataset_name not in report:
-                    report[dataset_name] = {}
-                report[dataset_name][model_name] = metrics
+            BenchmarkClass = task_to_benchmark[config['TASK']]
+            benchmark = BenchmarkClass(pipe, dataset, config['METRICS'])
+            metrics = benchmark.run_benchmark()
 
-                with open('results.json', 'w') as f:
-                    results = {}
-                    results['report'] = report
-                    results['meta'] = {'hf_model': ft_model}
-                    json.dump(results, f, indent=4)
+            if dataset_name not in report:
+                report[dataset_name] = {}
+            report[dataset_name][model_name] = metrics
+
+            with open('results.json', 'w') as f:
+                results = {}
+                results['report'] = report
+                results['config'] = config
+                json.dump(results, f, indent=4)
 
     logging.info(f"Benchmark Report: {report}")
 

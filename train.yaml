@@ -13,4 +13,4 @@ BATCH_SIZE: 16
 NUM_EPOCHS: 3
 LEARNING_RATE: 0.00002
 LOG_LEVEL: error
-HF_TOKEN: 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
+HF_TOKEN: #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
