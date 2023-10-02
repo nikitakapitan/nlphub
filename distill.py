@@ -67,7 +67,8 @@ def main(args):
 
     # INIT Model (Teacher)
     try:
-        teacher = AutoModelClass.from_pretrained(config['BASE_MODEL_NAME'], num_labels=num_classes)
+        hf_model = f"{config['HF_USER']}/{config['TEACHER']}"
+        teacher = AutoModelClass.from_pretrained(hf_model, num_labels=num_classes)
         logging.info(f"Model {teacher.__class__.__name__} initialized with {num_classes} classes.")
         teacher.to(device)
     except Exception as e:
@@ -87,7 +88,7 @@ def main(args):
     def compute_eval_metrics(eval_pred):
         logits, labels = eval_pred
         preds = logits.argmax(axis=-1)
-        accuracy_score = evaluate.load_metric("accuracy")
+        accuracy_score = evaluate.load("accuracy")
         return  accuracy_score.compute(predictions=preds, references=labels)
 
     # Tokenize
