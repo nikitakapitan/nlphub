@@ -1,6 +1,10 @@
 TASK: text-classification
 TEACHER: bert-base-uncased-finetuned-clinc
 STUDENT: distilbert-base-uncased
-DATASET_NAMES:
-  - clinc_oos
+DATASET_NAME: clinc_oos
+DATASET_CONFIG_NAME: null
+EVAL_DATASET: validation # default 'validation', otherwise 'test' 
 BATCH_SIZE: 48
+NUM_EPOCHS: 5
+LEARNING_RATE: 0.00002
+ALPHA: 1 # Total_loss = alpha * Loss_CE + (1-alpha) * Loss_KD

@@ -24,10 +24,6 @@ if not os.path.exists('/content/logs/'):
     os.makedirs('/content/logs/')
 logging.basicConfig(filename=f"logs/train_{time.strftime('%Y-%m-%d_%H-%M-%S')}.log", level=logging.INFO)
 
-task_to_auto_model = {
-    'text-classification' : AutoModelForSequenceClassification
-}
-
 def main(args):
 
     with open(args, 'r') as f:
@@ -38,11 +34,6 @@ def main(args):
     logging.info(yaml.dump(config))
 
     os.environ['TRANSFORMERS_TOKEN'] = config['HF_TOKEN']
-
-    # Dynamic Class Mapping
-    AutoModelClass = task_to_auto_model[config['TASK']]
-    logging.info(f"Mapped to AutoModel Class: {AutoModelClass.__name__}")
-
     device = 'cuda'
 
     # Load Dataset
@@ -51,7 +42,8 @@ def main(args):
         dataset = load_dataset(config['DATASET_NAME'], dataset_config_name)
         for split in dataset:
             dataset[split] = rename_split_label_key(dataset[split])
-        logging.info(f"Dataset {config['DATASET_NAME']} loaded.")
+        num_classes = get_dataset_num_classes(dataset['train'].features)
+        logging.info(f"Dataset {config['DATASET_NAME']} loaded. {num_classes=}")
     except Exception as e:
         logging.error(f"Error loading dataset: {e}")
         exit(1)
@@ -64,12 +56,15 @@ def main(args):
         logging.error(f"Error initializing tokenizer: {e}")
         exit(1)
 
-    tokenize = lambda batch: tokenizer(batch['text'], truncation=True)
-    dataset_encoded = dataset.map(tokenize, batched=True)
+    
+    # Dynamic Class Mapping
+    AutoModelClass = {
+    'text-classification' : AutoModelForSequenceClassification
+    }[config['TASK']]
+    logging.info(f"Mapped to AutoModel Class: {AutoModelClass.__name__}")
 
     # INIT Model 
     try:
-        num_classes = get_dataset_num_classes(dataset['train'].features)
         model = AutoModelClass.from_pretrained(config['BASE_MODEL_NAME'], num_labels=num_classes)
         logging.info(f"Model {model.__class__.__name__} initialized with {num_classes} classes.")
         model.to(device)
@@ -103,6 +98,9 @@ def main(args):
             
         return metrics
 
+    # TOKENIZE
+    tokenize = lambda batch: tokenizer(batch['text'], truncation=True)
+    dataset_encoded = dataset.map(tokenize, batched=True)
 
     # Training Arguments
     training_args = TrainingArguments(
@@ -149,6 +147,6 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fine-tuning models with Hugging Face Transformers')
-    parser.add_argument('--config', type=str, required=True, help='Path to the JSON config file')
+    parser.add_argument('--config', type=str, required=True, help='Path to the YAML config file')
     args = parser.parse_args()
     main(args.config)
