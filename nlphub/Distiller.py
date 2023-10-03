@@ -1,5 +1,4 @@
 from nlphub import Trainer
-from nlphub import  DistillationTrainingArguments, DistillationTrainer
 import logging
 
 class Distiller(Trainer):
