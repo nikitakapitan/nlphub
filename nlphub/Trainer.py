@@ -21,7 +21,7 @@ class Trainer(ABC):
         self.load_dataset()     # self.dataset, self.num_classes
         self.init_tokenizer()   # self.tokenizer
         self.init_model()       # self.model
-        self.compute_metrics()  # self.compute_metrics_func
+        self.define_compute_metrics()  # self.compute_metrics_func
 
     def setup(self):
         logging.info("Input Configurations:")
@@ -52,15 +52,12 @@ class Trainer(ABC):
         self.tokenizer = tokenizer
 
     def init_model(self):
-        try:
-            model = self.AutoModelClass.from_pretrained(self.config['BASE_MODEL_NAME'], num_labels=self.num_classes)
-            logging.info(f"INIT Model: {model.__class__.__name__} initialized with {self.num_classes} classes ✅")
-            model.to(self.device)
-        except Exception as e:
-            print(f"Error initializing model: {e}")
-            exit(1)
+        model = self.AutoModelClass.from_pretrained(self.config['BASE_MODEL_NAME'], num_labels=self.num_classes)
+        logging.info(f"INIT Model: {model.__class__.__name__} initialized with {self.num_classes} classes ✅")
+        model.to(self.device)
 
-    def compute_metrics_func(self):
+
+    def define_compute_metrics(self):
         # abstract method by default use accuracy.
 
         def compute_metrics(eval_pred):

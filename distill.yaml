@@ -1,13 +1,12 @@
 TASK: text-classification
-TEACHER: bert-base-uncased-finetuned-clinc_oos
-STUDENT: distilbert-base-uncased
+HF_USER: nikitakapitan
+TEACHER: bert-base-uncased-finetuned-clinc_oos  # any custom FT-model
+STUDENT: distilbert-base-uncased                # init model
 DATASET_NAME: clinc_oos
 DATASET_CONFIG_NAME: plus
-EVAL_DATASET: validation # default 'validation', otherwise 'test' 
+EVAL_DATASET: validation                        # 'validation', if not: 'test' 
 BATCH_SIZE: 48
 NUM_EPOCHS: 5
 LEARNING_RATE: 0.00002
-ALPHA: 1 # Total_loss = alpha * Loss_CE + (1-alpha) * Loss_KD
+ALPHA: 1                                        # Loss = alpha*Loss_CE + (1-alpha)*Loss_KD
 LOG_LEVEL: error
-HF_TOKEN: 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
-HF_USER: nikitakapitan
