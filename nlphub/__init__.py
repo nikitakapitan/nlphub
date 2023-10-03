@@ -1,3 +1,8 @@
+# nlphub
+from Trainer import Trainer
+from Distiller import Distiller
+from FineTuner import FineTuner
+
 # Benchmark
 from .benchmarks.PerformanceBenchmark import PerformanceBenchmark
 from .benchmarks.tasks.ClassificationBenchmark import ClassificationBenchmark
