@@ -58,7 +58,7 @@ class Trainer(ABC):
 
 
     def define_compute_metrics(self):
-        # abstract method by default use accuracy.
+        # abstract method by default uses accuracy.
 
         def compute_metrics(eval_pred):
             logits, labels = eval_pred

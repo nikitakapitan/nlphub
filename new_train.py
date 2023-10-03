@@ -9,15 +9,11 @@
  
 import os
 import yaml
-import argparse
 import logging
+import argparse
 import time
-
-from datasets import load_dataset
-from transformers import AutoTokenizer, TrainingArguments, Trainer
-from transformers import AutoModelForSequenceClassification
-import evaluate
-from nlphub.utils import rename_split_label_key, get_dataset_num_classes
+from transformers import TrainingArguments, Trainer
+from nlphub import FineTuner
 
 # Initialize logging
 if not os.path.exists('/content/logs/'):
@@ -28,79 +24,11 @@ def main(args):
 
     with open(args, 'r') as f:
         config = yaml.safe_load(f)
-
-    # Log input configs
-    logging.info("Input Configurations:")
-    logging.info(yaml.dump(config))
-
-    os.environ['TRANSFORMERS_TOKEN'] = config['HF_TOKEN']
-    device = 'cuda'
-
-    # Load Dataset
-    try:
-        dataset_config_name = config.get('DATASET_CONFIG_NAME') # can be None
-        dataset = load_dataset(config['DATASET_NAME'], dataset_config_name)
-        for split in dataset:
-            dataset[split] = rename_split_label_key(dataset[split])
-        num_classes = get_dataset_num_classes(dataset['train'].features)
-        logging.info(f"Dataset {config['DATASET_NAME']} loaded. {num_classes=}")
-    except Exception as e:
-        logging.error(f"Error loading dataset: {e}")
-        exit(1)
-
-    # INIT Tokenization
-    try:
-        tokenizer = AutoTokenizer.from_pretrained(config['BASE_MODEL_NAME'])
-        logging.info(f"Tokenizer for {config['BASE_MODEL_NAME']} initialized.")
-    except Exception as e:
-        logging.error(f"Error initializing tokenizer: {e}")
-        exit(1)
-
-    
-    # Dynamic Class Mapping
-    AutoModelClass = {
-    'text-classification' : AutoModelForSequenceClassification
-    }[config['TASK']]
-    logging.info(f"Mapped to AutoModel Class: {AutoModelClass.__name__}")
-
-    # INIT Model 
-    try:
-        model = AutoModelClass.from_pretrained(config['BASE_MODEL_NAME'], num_labels=num_classes)
-        logging.info(f"Model {model.__class__.__name__} initialized with {num_classes} classes.")
-        model.to(device)
-    except Exception as e:
-        print(f"Error initializing model: {e}")
-        exit(1)
-
-    # LOAD metrics
-    metric_funcs = {}
-    for metric_config in config['METRIC_NAMES']:
-        metric_name = metric_config['name']
-        metric_args = metric_config.get('args', {})
-        try:
-            metric_funcs[metric_name] = {
-                'func': evaluate.load(metric_name),
-                'args': metric_args
-                }
-        except Exception as e:
-            print(f"Error loading metric {metric_name}: {e}")
-            exit(1)
-
-    def compute_eval_metrics(eval_pred):
-        logits, labels = eval_pred
-        preds = logits.argmax(axis=-1)
-
-        metrics = {}
-        for metric_name, metric_detail in metric_funcs.items():
-            metric_func = metric_detail['func']
-            metric_args = metric_detail['args']
-            metrics[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
-            
-        return metrics
+    finetuner = FineTuner(config)
 
     # TOKENIZE
-    tokenize = lambda batch: tokenizer(batch['text'], truncation=True)
-    dataset_encoded = dataset.map(tokenize, batched=True)
+    tokenize = lambda batch: finetuner.tokenizer(batch['text'], truncation=True)
+    dataset_encoded = finetuner.dataset.map(tokenize, batched=True)
 
     # Training Arguments
     training_args = TrainingArguments(
@@ -118,12 +46,12 @@ def main(args):
     )
 
     trainer = Trainer(
-        model=model,
+        model=finetuner.model,
         args=training_args,
         train_dataset=dataset_encoded['train'],
         eval_dataset=dataset_encoded[config['EVAL_DATASET']],
-        tokenizer=tokenizer,
-        compute_metrics=compute_eval_metrics,
+        tokenizer=finetuner.tokenizer,
+        compute_metrics=finetuner.compute_metrics_func,
     )
 
     # Train and Evaluate

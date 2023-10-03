@@ -5,7 +5,6 @@ EVAL_DATASET: test # default should be 'validation'
 BASE_MODEL_NAME: bert-base-uncased
 METRIC_NAMES:
   - name: "accuracy"
-    args: {}
   - name: "f1"
     args: 
       average: "weighted"
