@@ -28,7 +28,7 @@ class FineTuner(Trainer):
                 'func': evaluate.load(metric_config['name']),
                 'args': metric_config.get('args', {})}
             
-        self.metrics = metrics_functions
+        self.metrics_functions = metrics_functions
 
 
     def define_compute_metrics(self):

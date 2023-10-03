@@ -1,6 +1,6 @@
 from nlphub import PerformanceBenchmark
-import datasets
-from nlphub.utils import rename_split_label_key
+
+
 import logging
 
 """The MODELBenchmark:
@@ -11,14 +11,7 @@ import logging
 class ClassificationBenchmark(PerformanceBenchmark):
 
     def __init__(self, pipeline, dataset, metric_cfgs):
-        super().__init__(pipeline, metric_cfgs)
-         
-        assert isinstance(dataset, datasets.Dataset), \
-        f'dataset is not of type datasets.Dataset but {type(dataset)}'
-        dataset = rename_split_label_key(dataset)
-        self.dataset = dataset
-        assert 'text' in dataset.features and 'label' in dataset.features, \
-        f"dataset doesn't contain 'text' or 'label' but {dataset.features.keys()}"
+        super().__init__(pipeline, dataset, metric_cfgs)
         
 
     def compute_performance(self) -> dict:
@@ -26,9 +19,7 @@ class ClassificationBenchmark(PerformanceBenchmark):
 
         for example in self.dataset:
             pred = self.pipeline(example['text'])
-
             pred_int =  self.pipeline.model.config.label2id[pred[0]['label']]
-
             preds.append(pred_int)
             labels.append(example['label'])
 
@@ -37,6 +28,5 @@ class ClassificationBenchmark(PerformanceBenchmark):
             metric_func = metric_detail['func']
             metric_args = metric_detail['args']
             metrics[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
-
-        logging.info(f"Metrics: {metrics}")    
+    
         return metrics

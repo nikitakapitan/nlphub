@@ -6,31 +6,44 @@ import torch
 from time import perf_counter
 from pathlib import Path
 import logging
+import datasets
+from nlphub.utils import rename_split_label_key
 
 """ This is TASK-Agnostic Base class.
 """
 
 class PerformanceBenchmark(ABC):
-    def __init__(self, pipeline, metric_cfgs):
+    def __init__(self, pipeline, dataset, metric_cfgs):
         """
         pipeline = transformers.pipeline('task', 'model')
         metrics = [ {'name': 'accuracy', 'args': {}},
                     {'name': 'f1',       'args': {'average': 'weighted'}}]
         """
-        assert isinstance(pipeline, transformers.Pipeline)
+        self.dataset = dataset
         self.pipeline = pipeline
+        self.sanityCheck()
 
         self._prepare_metrics(metric_cfgs)
 
+    def sanityCheck(self):
+        assert isinstance(self.dataset, datasets.Dataset), \
+        f'dataset is not of type datasets.Dataset but {type(self.dataset)}'
+        self.dataset = rename_split_label_key(self.dataset)
+        assert ('text' in self.dataset.features) and ('label' in self.dataset.features), \
+        f"dataset doesn't contain 'text' and 'label' but {self.dataset.features.keys()}"
+
+        assert isinstance(self.pipeline, transformers.Pipeline), \
+        f'pipeline is not of type datasets.Dataset but {type(self.pipeline)}'
         
     def _prepare_metrics(self, metric_cfgs):
-        self.metric_funcs = {}
+        metrics_functions = {}
         for metric_cfg in metric_cfgs:
-            metric_name = metric_cfg['name']
-            metric_args = metric_cfg.get('args', {})
-            self.metric_funcs[metric_name] = {
-                'func': evaluate.load(metric_name),
-                'args': metric_args         }
+
+            metrics_functions[metric_cfg['name']] = {
+                'func': evaluate.load(metric_cfg['name']),
+                'args': metric_cfg.get('args', {})}
+            
+        self.metrics_functions = metrics_functions
 
     @abstractclassmethod
     def compute_performance(self, dataset) -> dict:

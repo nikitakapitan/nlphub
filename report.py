@@ -7,13 +7,10 @@ import argparse
 import logging
 import time
 
-import torch
 from datasets import load_dataset
 from transformers import pipeline
 
-from nlphub import PerformanceBenchmark, ClassificationBenchmark
-from nlphub.benchmarks.mapping import task_model_dataset_to_ft_model, task_to_benchmark
-
+from nlphub import ClassificationBenchmark
 device = 'cuda'
 
 # Initialize logging
@@ -33,17 +30,20 @@ def main(config_path):
     report = {}
 
     for dataset_name in config['DATASET_NAMES']:
-        logging.info(f"Loading {dataset_name} dataset ...")
+
         dataset = load_dataset(dataset_name, split='test')
 
         for model_name in config['MODEL_NAMES']:
-            logging.info(f"Loading {model_name} pipeline ...")
 
             # truncation : crop input text to model max_length | device=0 : first available GPU
             pipe = pipeline(config['TASK'], model=model_name, truncation=True, device=0) 
-            
 
-            BenchmarkClass = task_to_benchmark[config['TASK']]
+            BenchmarkClass = {
+                'text-classification'   : ClassificationBenchmark,
+                'question-answering'    : None,
+                'ner'                   : None,
+            }[config['TASK']]
+
             benchmark = BenchmarkClass(pipe, dataset, config['METRICS'])
             metrics = benchmark.run_benchmark()
 
@@ -56,8 +56,6 @@ def main(config_path):
                 results['report'] = report
                 results['config'] = config
                 json.dump(results, f, indent=4)
-
-    logging.info(f"Benchmark Report: {report}")
 
 
 

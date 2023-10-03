@@ -55,6 +55,7 @@ class Trainer(ABC):
         model = self.AutoModelClass.from_pretrained(self.config['BASE_MODEL_NAME'], num_labels=self.num_classes)
         logging.info(f"INIT Model: {model.__class__.__name__} initialized with {self.num_classes} classes ✅")
         model.to(self.device)
+        self.model = model
 
 
     def define_compute_metrics(self):
