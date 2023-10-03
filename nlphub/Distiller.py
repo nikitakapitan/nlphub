@@ -1,5 +1,6 @@
 from nlphub import Trainer
 import logging
+from transformers import AutoConfig, AutoTokenizer
 
 class Distiller(Trainer):
 
@@ -27,6 +28,6 @@ class Distiller(Trainer):
                                                     num_labels=self.num_classes,
                                                     id2label=self.teacher.config.id2label,
                                                     label2id=self.teacher.config.label2id)
-            return AutoModelClass.from_pretrained(self.config['STUDENT'], config=student_config).to(self.device)
+            return self.AutoModelClass.from_pretrained(self.config['STUDENT'], config=student_config).to(self.device)
         
         self.student_init = student_init # function

@@ -6,7 +6,12 @@
 # !pip install datasets transformers evaluate accelerate 
 
 # python distill.py --config distill.yaml
-
+import os
+import yaml
+import logging
+import argparse
+import time
+from nlphub import  DistillationTrainingArguments, DistillationTrainer
 from nlphub import Distiller
 
 

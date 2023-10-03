@@ -7,12 +7,12 @@ import logging
 import time
 
 from datasets import load_dataset
-from transformers import AutoTokenizer, TrainingArguments, Trainer
+from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 import evaluate
 from nlphub.utils import rename_split_label_key, get_dataset_num_classes
 
-def Trainer(ABC):
+class Trainer(ABC):
 
     def __init__(self, config):
 
@@ -35,16 +35,13 @@ def Trainer(ABC):
         self.device = 'cuda'
 
     def load_dataset(self):
-        try:
-            dataset_config_name = self.config.get('DATASET_CONFIG_NAME') # can be None
-            dataset = load_dataset(self.config['DATASET_NAME'], dataset_config_name)
-            for split in dataset:
-                dataset[split] = rename_split_label_key(dataset[split])
-            num_classes = get_dataset_num_classes(dataset['train'].features)
-            logging.info(f"Dataset {self.config['DATASET_NAME']} loaded ✅ {num_classes=}")
-        except Exception as e:
-            logging.error(f"Error loading dataset: {e}")
-            exit(1)
+        dataset_config_name = self.config.get('DATASET_CONFIG_NAME') # can be None
+        dataset = load_dataset(self.config['DATASET_NAME'], dataset_config_name)
+        for split in dataset:
+            dataset[split] = rename_split_label_key(dataset[split])
+        num_classes = get_dataset_num_classes(dataset['train'].features)
+        logging.info(f"Dataset {self.config['DATASET_NAME']} loaded ✅ {num_classes=}")
+
 
         self.dataset = dataset
         self.num_classes = num_classes
