@@ -37,6 +37,8 @@ class Trainer(ABC):
     def load_dataset(self):
         dataset_config_name = self.config.get('DATASET_CONFIG_NAME') # can be None
         dataset = load_dataset(self.config['DATASET_NAME'], dataset_config_name)
+
+        # mae sure dataset has "label" and "text" keys.
         for split in dataset:
             dataset[split] = rename_split_label_key(dataset[split])
         num_classes = get_dataset_num_classes(dataset['train'].features)
@@ -52,6 +54,7 @@ class Trainer(ABC):
         self.tokenizer = tokenizer
 
     def init_model(self):
+        # init model with num_labels
         model = self.AutoModelClass.from_pretrained(self.config['BASE_MODEL_NAME'], num_labels=self.num_classes)
         logging.info(f"INIT Model: {model.__class__.__name__} initialized with {self.num_classes} classes ✅")
         model.to(self.device)

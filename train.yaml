@@ -12,3 +12,12 @@ BATCH_SIZE: 16
 NUM_EPOCHS: 3
 LEARNING_RATE: 0.00002
 LOG_LEVEL: error
+
+
+# HELPER:
+# TASK: text-classification, ner,
+# DATASET_NAME:
+#       text-classification: imbd, emotion,
+#       ner:
+#       question-answering:
+#
