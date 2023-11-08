@@ -1,13 +1,17 @@
 # Colab:
 # Turn ON GPU
-# !git clone https://github.com/nikitakapitan/nlphub.git
-# !mv nlphub/train.yaml .
-# !mkdir logs
-# !pip install datasets transformers evaluate accelerate 
+
+#%%capture
+#!git clone https://github.com/nikitakapitan/nlphub.git
+#!mv nlphub/train.yaml .
+#!mkdir logs
+#!pip install datasets transformers evaluate accelerate 
+# from huggingface_hub import login
+# login("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")
 
 # >>> Customize train.yaml
 
-# python train.py --config train.yaml
+# python nlphub/train.py --config train.yaml
  
 import os
 import yaml

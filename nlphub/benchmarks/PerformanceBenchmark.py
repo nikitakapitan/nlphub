@@ -36,12 +36,13 @@ class PerformanceBenchmark(ABC):
         f'pipeline is not of type datasets.Dataset but {type(self.pipeline)}'
         
     def _prepare_metrics(self, metric_cfgs):
+        """output is a dict keys = functions, values = configs:
+        {evaluate.metrics.accuracy : {},
+         evaluate.metrics.f1_score : {average: weighted}
+        """
         metrics_functions = {}
-        for metric_cfg in metric_cfgs:
-
-            metrics_functions[metric_cfg['name']] = {
-                'func': evaluate.load(metric_cfg['name']),
-                'args': metric_cfg.get('args', {})}
+        for metric_name, config in metric_cfgs:
+            metrics_functions[evaluate.load(metric_name)] = config
             
         self.metrics_functions = metrics_functions
 

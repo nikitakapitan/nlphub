@@ -7,8 +7,7 @@ DATASET_NAMES:
   - emotion
   - clinc_oos
 METRICS:
-  - name: accuracy
-    args: {}
-  - name: f1
-    args: 
-      average: weighted
+  - accuracy: {}
+  - f1      : {average: weighted}
+
+      

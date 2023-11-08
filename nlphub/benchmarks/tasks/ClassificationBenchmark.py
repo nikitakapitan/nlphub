@@ -11,6 +11,12 @@ import logging
 class ClassificationBenchmark(PerformanceBenchmark):
 
     def __init__(self, pipeline, dataset, metric_cfgs):
+        """
+        pipeline    : transformers.pipeline
+        dataset     : datasets.Dataset
+        metric_cfgs : {'accuracy'   : {},
+                       'f1'         : {'average': 'weighted'}}
+        """
         super().__init__(pipeline, dataset, metric_cfgs)
         
 
@@ -24,9 +30,7 @@ class ClassificationBenchmark(PerformanceBenchmark):
             labels.append(example['label'])
 
         metrics = {}
-        for metric_name, metric_detail in self.metric_funcs.items():
-            metric_func = metric_detail['func']
-            metric_args = metric_detail['args']
-            metrics[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
+        for metric_func, metric_args in self.metric_funcs.items():
+            metrics.update(metric_func.compute(predictions=preds, references=labels, **metric_args))
     
         return metrics

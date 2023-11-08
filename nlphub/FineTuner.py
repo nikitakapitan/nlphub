@@ -47,7 +47,7 @@ class FineTuner(Trainer):
             for metric_name, metric_data  in self.metrics_functions.items():
                 metric_func = metric_data['func']
                 metric_args = metric_data['args']
-                metrics[metric_name] = metric_func.compute(predictions=preds, references=labels, **metric_args)
+                metrics.update(metric_func.compute(predictions=preds, references=labels, **metric_args))
                 
             return metrics
         
