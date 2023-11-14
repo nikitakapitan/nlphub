@@ -13,7 +13,7 @@ from nlphub.utils import rename_split_label_key
 """
 
 class PerformanceBenchmark(ABC):
-    def __init__(self, pipeline, dataset, metric_cfgs):
+    def __init__(self, pipeline, dataset, metric_config):
         """
         pipeline = transformers.pipeline('task', 'model')
         metrics = [ {'name': 'accuracy', 'args': {}},
@@ -23,7 +23,7 @@ class PerformanceBenchmark(ABC):
         self.pipeline = pipeline
         self.sanityCheck()
 
-        self._prepare_metrics(metric_cfgs)
+        self._prepare_metrics(metric_config)
 
     def sanityCheck(self):
         assert isinstance(self.dataset, datasets.Dataset), \
@@ -35,13 +35,13 @@ class PerformanceBenchmark(ABC):
         assert isinstance(self.pipeline, transformers.Pipeline), \
         f'pipeline is not of type datasets.Dataset but {type(self.pipeline)}'
         
-    def _prepare_metrics(self, metric_cfgs):
+    def _prepare_metrics(self, metric_config):
         """output is a dict keys = functions, values = configs:
         {evaluate.metrics.accuracy : {},
          evaluate.metrics.f1_score : {average: weighted}
         """
         metrics_functions = {}
-        for metric_name, config in metric_cfgs:
+        for metric_name, config in metric_config.items():
             metrics_functions[evaluate.load(metric_name)] = config
             
         self.metrics_functions = metrics_functions

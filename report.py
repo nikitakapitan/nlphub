@@ -1,4 +1,22 @@
-# python report.py --config report.yaml
+# %%capture
+# !git clone https://github.com/nikitakapitan/nlphub.git
+# !pip install datasets transformers evaluate accelerate 
+# !mv nlphub/report.yaml .
+
+# >>> Customize report.yaml
+
+#!python nlphub/report.py --config report.yaml
+
+"""This script produce a report for every model listed X for every dataset listed.
+
+Pseudo-code.
+FOR DATASET in DATASETS:
+    FOR MODEL IN MODELS:
+        create PIPE(TASK, MODEL)
+        create BENCHMARK(PIPE, DATASET)
+        run BENCHMAR.RUN()
+        return METRICS (results.json)
+"""
 
 import os
 import yaml
@@ -31,7 +49,10 @@ def main(config_path):
 
     for dataset_name in config['DATASET_NAMES']:
 
-        dataset = load_dataset(dataset_name, split='test')
+        if dataset_name=='clinc_oos':
+            dataset = load_dataset(dataset_name, 'plus', split='test')
+        else:
+            dataset = load_dataset(dataset_name, split='test')
 
         for model_name in config['MODEL_NAMES']:
 
@@ -44,7 +65,8 @@ def main(config_path):
                 'ner'                   : None,
             }[config['TASK']]
 
-            benchmark = BenchmarkClass(pipe, dataset, config['METRICS'])
+            metrics_config = {k:v for d in config['METRICS'] for k, v in d.items()} # cast list[dict] -> dict
+            benchmark = BenchmarkClass(pipe, dataset, metrics_config)
             metrics = benchmark.run_benchmark()
 
             if dataset_name not in report:
