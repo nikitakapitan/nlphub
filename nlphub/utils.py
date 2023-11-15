@@ -1,13 +1,20 @@
 import datasets
 
 def rename_split_label_key(dataset) -> None:
-    "dataset : transformers.Dataset (ex. dataset=DatasetDict['test'])"
-    "rename given dataset split key ('intent', 'answer' etc) to 'label"
+    """
+    dataset : transformers.Dataset (ex. dataset=DatasetDict['test'])
+    rename given dataset split key ('intent', 'answer' etc) to 'label'
+    rename given dataset split key ('sentence') to 'text'
+    """
     for key, feature in dataset.features.items():
         if isinstance(feature, datasets.ClassLabel):
-            current_key = key
-    if current_key != 'label':
-        dataset = dataset.rename_column(current_key, 'label')
+            current_label_key = key
+        if isinstance(feature, datasets.Value) and feature.dtype == 'string':
+            current_text_key = key
+    if current_label_key != 'label':
+        dataset = dataset.rename_column(current_label_key, 'label')
+    if current_text_key != 'text':
+        dataset = dataset.rename_column(current_text_key, 'text')
     return dataset
 
 
