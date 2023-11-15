@@ -16,8 +16,10 @@ class PerformanceBenchmark(ABC):
     def __init__(self, pipeline, dataset, metric_config):
         """
         pipeline = transformers.pipeline('task', 'model')
-        metrics = [ {'name': 'accuracy', 'args': {}},
-                    {'name': 'f1',       'args': {'average': 'weighted'}}]
+        metric_cfgs : list[dict]
+                    [{'accuracy'   : {}},
+                     {'f1'         : {'average': 'weighted'}},
+                     {'glue'       : ['cola', 'mrpc', 'qqp']}]
         """
         self.dataset = dataset
         self.pipeline = pipeline
@@ -41,8 +43,13 @@ class PerformanceBenchmark(ABC):
          evaluate.metrics.f1_score : {average: weighted}
         """
         metrics_functions = {}
-        for metric_name, config in metric_config.items():
-            metrics_functions[evaluate.load(metric_name)] = config
+        for metric_dict in metric_config:
+            for metric_name, metric_cfg in metric_dict.items():
+                if metric_name == "glue":
+                    for glue_task in metric_cfg:
+                        metrics_functions[evaluate.load("glue", glue_task)] = {}
+                else:
+                    metrics_functions[evaluate.load(metric_name)] = metric_cfg
             
         self.metrics_functions = metrics_functions
 
@@ -86,7 +93,7 @@ class PerformanceBenchmark(ABC):
         time_std_ms = 1_000 * np.std(latencies)
         print(f"Average latency (ms) - {time_avg_ms:.2f} +\- {time_std_ms:.2f}")
         logging.info(f"Average latency (ms) - {time_avg_ms:.2f} +\- {time_std_ms:.2f}")
-        return {'time_avg_ms' : time_avg_ms, 'time_std_ms' : time_std_ms}
+        return {'PerformanceBenchmark.py: time_avg_ms' : time_avg_ms, 'time_std_ms' : time_std_ms}
 
     def run_benchmark(self):
         metrics = {

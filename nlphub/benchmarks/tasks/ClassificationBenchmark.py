@@ -14,8 +14,10 @@ class ClassificationBenchmark(PerformanceBenchmark):
         """
         pipeline    : transformers.pipeline
         dataset     : datasets.Dataset
-        metric_cfgs : {'accuracy'   : {},
-                       'f1'         : {'average': 'weighted'}}
+        metric_cfgs : list[dict]
+                    [{'accuracy'   : {}},
+                     {'f1'         : {'average': 'weighted'}},
+                     {'glue'       : ['cola', 'mrpc', 'qqp']}]
         """
         super().__init__(pipeline, dataset, metric_config)
         
