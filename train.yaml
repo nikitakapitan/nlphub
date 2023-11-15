@@ -1,6 +1,6 @@
 TASK: text-classification
-DATASET_NAME: imdb
-DATASET_CONFIG_NAME: null
+DATASET_NAME: glue
+DATASET_CONFIG_NAME: cola
 EVAL_DATASET: test # default should be 'validation'
 BASE_MODEL_NAME: distilbert-base-uncased
 METRICS:

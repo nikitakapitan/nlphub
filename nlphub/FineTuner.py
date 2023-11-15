@@ -14,7 +14,7 @@ class FineTuner(Trainer):
          evaluate.metrics.f1_score : {average: weighted}
         """
         metrics_functions = {}
-        for metric_dict in self.config['METRICs']:
+        for metric_dict in self.config['METRICS']:
             for metric_name, metric_cfg in metric_dict.items():
                 if metric_name == "glue":
                     for glue_task in metric_cfg:
