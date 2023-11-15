@@ -40,7 +40,7 @@ def main(args):
 
     # Training Arguments
     training_args = TrainingArguments(
-        output_dir=f'{config["BASE_MODEL_NAME"]}-finetuned-{config["DATASET_NAME"]}',
+        output_dir=f'{config["BASE_MODEL_NAME"]}-finetuned-{config["DATASET_NAME"]}_{config["DATASET_CONFIG_NAME"]}',
         num_train_epochs=config['NUM_EPOCHS'],
         learning_rate=config['LEARNING_RATE'],
         per_device_train_batch_size=config['BATCH_SIZE'],

@@ -6,27 +6,21 @@ class FineTuner(Trainer):
 
     def __init__(self, config):
         super().__init__(config)
-        self.load_metrics()         # self.metrics
+        self._load_metrics()         # self.metrics
 
-    def load_metrics(self):
-        """ Output example:
-        {
-            'accuracy': {
-                'func': evaluate.accuracy,
-                'args': None
-            },
-            'f1': {
-                'func': evaluate.f1,
-                'args': {'average': 'weighted'}
-            }
-        }                      
+    def _load_metrics(self):
+        """output is a dict keys = functions, values = configs:
+        {evaluate.metrics.accuracy : {},
+         evaluate.metrics.f1_score : {average: weighted}
         """
         metrics_functions = {}
-        for metric_config in self.config['METRIC_NAMES']:
-
-            metrics_functions[metric_config['name']] = {
-                'func': evaluate.load(metric_config['name']),
-                'args': metric_config.get('args', {})}
+        for metric_dict in self.config['METRICs']:
+            for metric_name, metric_cfg in metric_dict.items():
+                if metric_name == "glue":
+                    for glue_task in metric_cfg:
+                        metrics_functions[evaluate.load("glue", glue_task)] = {}
+                else:
+                    metrics_functions[evaluate.load(metric_name)] = metric_cfg
             
         self.metrics_functions = metrics_functions
 
@@ -44,11 +38,9 @@ class FineTuner(Trainer):
             preds = logits.argmax(axis=-1)
 
             metrics = {}
-            for metric_name, metric_data  in self.metrics_functions.items():
-                metric_func = metric_data['func']
-                metric_args = metric_data['args']
+            for metric_func, metric_args in self.metrics_functions.items():
                 metrics.update(metric_func.compute(predictions=preds, references=labels, **metric_args))
-                
+        
             return metrics
         
         self.compute_metrics_func = compute_metrics # function
