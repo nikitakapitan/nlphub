@@ -58,7 +58,7 @@ def main(args):
         model=finetuner.model,
         args=training_args,
         train_dataset=dataset_encoded['train'],
-        eval_dataset=dataset_encoded[config['EVAL_DATASET']],
+        eval_dataset=dataset_encoded[finetuner.eval_split],
         compute_metrics=finetuner.compute_metrics_func,
     )
   
