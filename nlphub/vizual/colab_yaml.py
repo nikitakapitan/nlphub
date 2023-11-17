@@ -3,7 +3,7 @@ import ipywidgets as widgets
 from IPython.display import display, clear_output
 
 # Load your YAML file
-yaml_file = 'train.yaml'  # Replace with your YAML file path
+yaml_file = 'nlphub/train.yaml'  # Replace with your YAML file path
 
 with open(yaml_file) as file:
     data = yaml.safe_load(file)
