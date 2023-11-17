@@ -61,8 +61,10 @@ trainer.train()
         accuracy_metric.compute(predictions=predictions, references=labels)
 
 
-
-
+# parse yaml
+with open(args, 'r') as f:
+        config = yaml.safe_load(f)
+    
 
 
 
