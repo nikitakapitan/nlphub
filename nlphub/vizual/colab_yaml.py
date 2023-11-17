@@ -20,9 +20,9 @@ model_options = ['bert-base-uncased', 'distilbert-base-uncased']
 
 # Create widgets
 task_widget = widgets.Dropdown(options=task_options, value=data['TASK'], description='TASK:')
+base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
 dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data['DATASET_NAME'], description='DATASET:')
 dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
-base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
 
 
 # Update function for DATASET_NAME change
@@ -72,4 +72,4 @@ output = widgets.Output()
 
 # Display widgets
 def config_yaml():
-    display(task_widget, dataset_name_widget, dataset_config_name_widget, base_model_name_widget, save_button, output)
+    display(task_widget, base_model_name_widget, dataset_name_widget, dataset_config_name_widget, save_button, output)
