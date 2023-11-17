@@ -46,7 +46,7 @@ class Trainer(ABC):
 
 
         self.dataset = dataset
-        self.eval_split = 'validation' if 'validation' is dataset else 'test'
+        self.eval_split = 'validation' if 'validation' in dataset else 'test'
         self.num_classes = num_classes
 
     def init_tokenizer(self):
