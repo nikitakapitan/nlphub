@@ -3,7 +3,7 @@ import ipywidgets as widgets
 from IPython.display import display, clear_output
 
 # Load your YAML file
-yaml_file = 'nlphub/train.yaml'  # Replace with your YAML file path
+yaml_file = 'train.yaml'  # Replace with your YAML file path
 
 with open(yaml_file) as file:
     data = yaml.safe_load(file)
@@ -16,15 +16,33 @@ dataset_config_name_options = {
     'clinc_oos': ['plus', None],
     'imdb': [None],
 }
+model_options = ['bert-base-uncased', 'distilbert-base-uncased']
 
 # Create widgets
 task_widget = widgets.Dropdown(options=task_options, value=data['TASK'], description='TASK:')
-dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data['DATASET_NAME'], description='DATASET_NAME:')
-dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATASET_CONFIG_NAME:')
+dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data['DATASET_NAME'], description='DATASET:')
+dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
+base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
+
 
 # Update function for DATASET_NAME change
 def update_dataset_config_name_options(*args):
     dataset_config_name_widget.options = dataset_config_name_options[dataset_name_widget.value]
+    update_metrics()
+
+# Update METRICS based on DATASET_NAME
+def update_metrics():
+    if dataset_name_widget.value == 'glue':
+        data['METRICS'] = [
+            {'accuracy': {}},
+            {'f1': {'average': 'weighted'}},
+            {'glue': [dataset_config_name_widget.value]}
+        ]
+    else:
+        data['METRICS'] = [
+            {'accuracy': {}},
+            {'f1': {'average': 'weighted'}}
+        ]
 
 # Observe changes in DATASET_NAME
 dataset_name_widget.observe(update_dataset_config_name_options, 'value')
@@ -37,6 +55,8 @@ def save_changes(b):
     data['TASK'] = task_widget.value
     data['DATASET_NAME'] = dataset_name_widget.value
     data['DATASET_CONFIG_NAME'] = dataset_config_name_widget.value
+    data['BASE_MODEL_NAME'] = base_model_name_widget.value
+    update_metrics()
 
     with open(yaml_file, 'w') as file:
         yaml.safe_dump(data, file)
@@ -52,4 +72,4 @@ output = widgets.Output()
 
 # Display widgets
 def config_yaml():
-    display(task_widget, dataset_name_widget, dataset_config_name_widget, save_button, output)
+    display(task_widget, dataset_name_widget, dataset_config_name_widget, base_model_name_widget, save_button, output)

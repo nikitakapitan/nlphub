@@ -13,3 +13,6 @@ from .efficiency.DistillationTrainer import DistillationTrainer
 
 # utils
 from .utils import get_dataset_num_classes, rename_split_label_key
+
+# vizual
+from .vizual.colab_yaml import config_yaml
