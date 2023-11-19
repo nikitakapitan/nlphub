@@ -30,19 +30,21 @@ weight_decay_options = [0.0, 0.01, 0.02, 0.03, 0.05]
 learning_rate_options = [0.00001, 0.00002, 0.0001, 0.0002, 0.001]
 push_to_hub_options = [True, False]
 evaluation_strategy_options = ['no', 'steps', 'epoch']
+batch_size_options = [8, 16, 32, 64]
 
 # Advanced settings widgets
 advanced_checkbox = widgets.Checkbox(value=False, description='Advanced')
+batch_size_widget = widgets.Dropdown(options=batch_size_options, value=data.get('BATCH_SIZE', 16), description='BATCH SIZE:')
 num_epochs_widget = widgets.Dropdown(options=num_epochs_options, value=data.get('NUM_EPOCHS', 1), description='EPOCHS:')
-weight_decay_widget = widgets.Dropdown(options=weight_decay_options, value=data.get('WEIGHT_DECAY', 0.0), description='WEIGHT DECAY:')
-learning_rate_widget = widgets.Dropdown(options=learning_rate_options, value=data.get('LEARNING_RATE', 0.0001), description='LEARNING RATE:')
-push_to_hub_widget = widgets.Dropdown(options=push_to_hub_options, value=data.get('PUSH_TO_HUB', False), description='PUSH TO HUB:')
-evaluation_strategy_widget = widgets.Dropdown(options=evaluation_strategy_options, value=data.get('EVALUATION_STRATEGY', 'no'), description='EVAL STRATEGY:')
+weight_decay_widget = widgets.Dropdown(options=weight_decay_options, value=data.get('WEIGHT_DECAY', 0.0), description='W8 DECAY:')
+learning_rate_widget = widgets.Dropdown(options=learning_rate_options, value=data.get('LEARNING_RATE', 0.0001), description='LRATE:')
+push_to_hub_widget = widgets.Dropdown(options=push_to_hub_options, value=data.get('PUSH_TO_HUB', False), description='PUSH2HUB:')
+evaluation_strategy_widget = widgets.Dropdown(options=evaluation_strategy_options, value=data.get('EVALUATION_STRATEGY', 'epoch'), description='EVAL STRAT:')
 
 # Function to toggle advanced settings
 def toggle_advanced_settings(change):
     if advanced_checkbox.value:
-        display(num_epochs_widget, weight_decay_widget, learning_rate_widget, push_to_hub_widget, evaluation_strategy_widget)
+        display(num_epochs_widget, batch_size_widget, weight_decay_widget, learning_rate_widget, push_to_hub_widget, evaluation_strategy_widget)
     else:
         clear_output()
         config_yaml()
@@ -82,6 +84,7 @@ def save_changes(b):
     data['BASE_MODEL_NAME'] = base_model_name_widget.value
     if advanced_checkbox.value:
         data['NUM_EPOCHS'] = num_epochs_widget.value
+        data['BATCH_SIZE'] = batch_size_widget.value
         data['WEIGHT_DECAY'] = weight_decay_widget.value
         data['LEARNING_RATE'] = learning_rate_widget.value
         data['PUSH_TO_HUB'] = push_to_hub_widget.value
@@ -103,7 +106,7 @@ output = widgets.Output()
 
 # Display widgets
 def config_yaml():
-    display(task_widget, base_model_name_widget, dataset_name_widget, dataset_config_name_widget, save_button, output)
+    display(task_widget, base_model_name_widget, dataset_name_widget, dataset_config_name_widget, advanced_checkbox, save_button, output)
     
     if advanced_checkbox.value:
         display(num_epochs_widget, weight_decay_widget, learning_rate_widget, push_to_hub_widget, evaluation_strategy_widget)
