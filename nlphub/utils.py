@@ -9,7 +9,7 @@ def rename_split_label_key(dataset) -> None:
     for key, feature in dataset.features.items():
         if isinstance(feature, datasets.ClassLabel):
             current_label_key = key
-        if isinstance(feature, datasets.Value) and feature.dtype == 'string':
+        elif isinstance(feature, datasets.Value) and feature.dtype == 'string':
             current_text_key = key
     if current_label_key != 'label':
         dataset = dataset.rename_column(current_label_key, 'label')
