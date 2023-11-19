@@ -31,7 +31,7 @@ learning_rate_options = [0.00001, 0.00002, 0.0001, 0.0002, 0.001]
 push_to_hub_options = [True, False]
 evaluation_strategy_options = ['no', 'steps', 'epoch']
 batch_size_options = [4, 8, 16, 32, 64]
-warmup_options = [4, 8, 16, 32, 64]
+warmup_options = [100, 300, 500]
 
 # Advanced settings widgets
 advanced_checkbox = widgets.Checkbox(value=False, description='Advanced')
