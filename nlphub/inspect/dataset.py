@@ -6,9 +6,9 @@ def get_datasetdict_size(dataset):
     total_size = 0
 
     # Iterate over each split in the DatasetDict
-    for split in dataset_dict.keys():
+    for split in dataset.keys():
         # Get the dataset directory for the current split
-        dataset_dir = dataset_dict[split].cache_files[0]['filename'].rsplit('/', 1)[0]
+        dataset_dir = dataset[split].cache_files[0]['filename'].rsplit('/', 1)[0]
 
         # Calculate the size for the current split
         for dirpath, dirnames, filenames in os.walk(dataset_dir):

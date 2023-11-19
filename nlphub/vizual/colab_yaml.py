@@ -12,7 +12,7 @@ with open(yaml_file) as file:
 task_options = ['text-classification', 'ner', 'question-answering']
 dataset_name_options = ['imdb', 'glue', 'clinc_oos']
 dataset_config_name_options = {
-    'glue': ['cola', 'sst2'],
+    'glue': ['cola', 'sst2', 'mrpc', 'mnli', 'qnli', 'qqp', 'rte', 'stsb', 'wnli', 'ax'],
     'clinc_oos': ['plus', None],
     'imdb': [None],
 }
