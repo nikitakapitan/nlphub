@@ -25,7 +25,7 @@ dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data[
 dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
 
 # Additional options for advanced settings
-num_epochs_options = [1, 3, 10, 100]
+num_epochs_options = [1, 2, 3, 5, 10, 100]
 weight_decay_options = [0.0, 0.01, 0.02, 0.03, 0.05]
 learning_rate_options = [0.00001, 0.00002, 0.0001, 0.0002, 0.001]
 push_to_hub_options = [True, False]
