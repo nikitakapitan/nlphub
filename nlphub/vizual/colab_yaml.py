@@ -31,6 +31,7 @@ learning_rate_options = [0.00001, 0.00002, 0.0001, 0.0002, 0.001]
 push_to_hub_options = [True, False]
 evaluation_strategy_options = ['no', 'steps', 'epoch']
 batch_size_options = [4, 8, 16, 32, 64]
+warmup_options = [4, 8, 16, 32, 64]
 
 # Advanced settings widgets
 advanced_checkbox = widgets.Checkbox(value=False, description='Advanced')
@@ -38,13 +39,15 @@ batch_size_widget = widgets.Dropdown(options=batch_size_options, value=data.get(
 num_epochs_widget = widgets.Dropdown(options=num_epochs_options, value=data.get('NUM_EPOCHS', 1), description='EPOCHS:')
 weight_decay_widget = widgets.Dropdown(options=weight_decay_options, value=data.get('WEIGHT_DECAY', 0.0), description='W8 DECAY:')
 learning_rate_widget = widgets.Dropdown(options=learning_rate_options, value=data.get('LEARNING_RATE', 0.0001), description='LRATE:')
+warmup_widget = widgets.Dropdown(options=warmup_options, value=data.get('WARMUP_STEPS', 500), description='WARMUP:')
+num_epochs_widget = widgets.Dropdown(options=num_epochs_options, value=data.get('NUM_EPOCHS', 1), description='EPOCHS:')
 push_to_hub_widget = widgets.Dropdown(options=push_to_hub_options, value=data.get('PUSH_TO_HUB', False), description='PUSH2HUB:')
 evaluation_strategy_widget = widgets.Dropdown(options=evaluation_strategy_options, value=data.get('EVALUATION_STRATEGY', 'epoch'), description='EVAL STRAT:')
 
 # Function to toggle advanced settings
 def toggle_advanced_settings(change):
     if advanced_checkbox.value:
-        display(num_epochs_widget, batch_size_widget, weight_decay_widget, learning_rate_widget, push_to_hub_widget, evaluation_strategy_widget)
+        display(num_epochs_widget, batch_size_widget, weight_decay_widget, learning_rate_widget, warmup_widget, push_to_hub_widget, evaluation_strategy_widget)
     else:
         clear_output()
         config_yaml()
@@ -87,6 +90,7 @@ def save_changes(b):
         data['BATCH_SIZE'] = batch_size_widget.value
         data['WEIGHT_DECAY'] = weight_decay_widget.value
         data['LEARNING_RATE'] = learning_rate_widget.value
+        data['WARMUP_STEPS'] = warmup_widget.value
         data['PUSH_TO_HUB'] = push_to_hub_widget.value
         data['EVALUATION_STRATEGY'] = evaluation_strategy_widget.value
 

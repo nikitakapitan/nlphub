@@ -45,7 +45,7 @@ def main(args):
         learning_rate=config['LEARNING_RATE'],
         per_device_train_batch_size=config['BATCH_SIZE'],
         per_device_eval_batch_size=config['BATCH_SIZE'],
-        warmup_steps=500,
+        warmup_steps=config['WARMUP_STEPS'],
         weight_decay=config['WEIGHT_DECAY'],
         evaluation_strategy='epoch',
         disable_tqdm=False,
