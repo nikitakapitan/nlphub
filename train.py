@@ -46,11 +46,11 @@ def main(args):
         per_device_train_batch_size=config['BATCH_SIZE'],
         per_device_eval_batch_size=config['BATCH_SIZE'],
         warmup_steps=500,
-        weight_decay=0.01,
+        weight_decay=config['WEIGHT_DECAY'],
         evaluation_strategy='epoch',
         disable_tqdm=False,
         logging_dir='./logs',
-        push_to_hub=True,
+        push_to_hub=config['PUSH_TO_HUB'],
         log_level=config['LOG_LEVEL'],
     )
 
