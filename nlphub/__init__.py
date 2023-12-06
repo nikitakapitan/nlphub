@@ -15,7 +15,8 @@ from .efficiency.DistillationTrainer import DistillationTrainer
 from .utils import get_dataset_num_classes, rename_split_label_key
 
 # vizual. 
-import nlphub.vizual as vizual
+import nlphub.vizual.metrics as metrics
+import nlphub.vizual.metrics as dataset
 
 # inspect
 from .inspect.dataset import get_datasetdict_size
