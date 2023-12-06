@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 
 def plot_char_histogram(dataset, name=None, split='train', quantile=0.98):
     # dataset: DataDict
+
+    # slice on particualr split.
+    if 'train' in dataset or 'test' in dataset:
+        dataset = dataset[split]
     
     preprocess_func = {
         None : lambda x : x,
@@ -10,7 +14,7 @@ def plot_char_histogram(dataset, name=None, split='train', quantile=0.98):
         'allenai/qasper' : preprocess_qasper,
                        }[name]
 
-    ds = preprocess_func(dataset[split])
+    ds = preprocess_func(dataset)
 
     ds = pd.DataFrame(ds)
 
