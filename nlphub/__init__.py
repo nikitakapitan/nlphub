@@ -16,7 +16,7 @@ from .utils import get_dataset_num_classes, rename_split_label_key
 
 # vizual. 
 import nlphub.vizual.metrics as metrics
-import nlphub.vizual.metrics as dataset
+import nlphub.vizual.dataset as dataset
 
 # inspect
 from .inspect.dataset import get_datasetdict_size

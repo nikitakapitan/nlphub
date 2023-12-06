@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def plot_char_histogram(dataset, name=None, split='train', quantile=0.98):
+def plot_char_histogram(dataset, name, split='train', quantile=0.98):
     # dataset: DataDict
 
     # slice on particualr split.
@@ -14,21 +14,19 @@ def plot_char_histogram(dataset, name=None, split='train', quantile=0.98):
         'allenai/qasper' : preprocess_qasper,
                        }[name]
 
-    ds = preprocess_func(dataset)
+    df = preprocess_func(dataset)
 
-    ds = pd.DataFrame(ds)
+    df['char_count'] = df['text'].apply(len)
 
-    ds['char_count'] = ds['text'].apply(len)
-
-    threshold = ds['char_count'].quantile(quantile)
-    sliced_ds = ds[ds['char_count'] <= threshold]
+    threshold = df['char_count'].quantile(quantile)
+    threshold_df = df[df['char_count'] <= threshold]
     
-    min_chars = ds['char_count'].min()
-    max_chars = ds['char_count'].max()
+    min_chars = df['char_count'].min()
+    max_chars = df['char_count'].max()
 
     plt.figure(figsize=(10, 6))
-    plt.hist(sliced_ds['char_count'], bins=20, color='skyblue', edgecolor='black')
-    plt.title('Histogram of Character Counts in Dataset')
+    plt.hist(threshold_df['char_count'], bins=20, color='skyblue', edgecolor='black')
+    plt.title(f'Histogram of Character Counts in Dataset[{split}]')
     plt.xlabel('Character Count')
     plt.ylabel('Frequency')
 
@@ -46,13 +44,23 @@ def preprocess_narrative_qa(dataset):
     'question' : str
     'answers' : List[str]}
     """
-    ds = {}
-    ds['text'] = dataset['document']['text']
-    ds['summary'] = dataset['document']['summary']['text']
-    ds['question'] = dataset['document']['question']['text']
-    ds['answers'] = []
-    for ans in dataset['document']['answers']:
-        ds['answers'].append(ans['text'])
+
+    texts, summaries, questions, answers = [], [], [], [] 
+
+    for example in dataset:
+        texts.append(example['document']['text'])
+        summaries.append(example['document']['summary']['text'])
+        questions.append(example['question']['text'])
+        one_question_answers = []
+        for ans in example['answers']:
+            one_question_answers.append(ans['text'])
+        answers.append(one_question_answers)
+
+    df = pd.DataFrame({'text': texts, 
+                        'summary' : summaries, 
+                        'question': questions,
+                        'answers' : answers})
+    return df
     
 
 def preprocess_qasper(ds):
