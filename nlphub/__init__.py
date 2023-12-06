@@ -16,7 +16,7 @@ from .utils import get_dataset_num_classes, rename_split_label_key
 
 # vizual
 from .vizual.colab_yaml import config_yaml
-from .vizual.dataset import plot_char_histogram
+from .vizual.dataset_vizual import plot_char_histogram
 
 # inspect
 from .inspect.dataset import get_datasetdict_size
