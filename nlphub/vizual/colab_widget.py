@@ -32,7 +32,7 @@ task_widget = widgets.Dropdown(options=task_options, value=data['TASK'], descrip
 base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
 dataset_name_widget = widgets.Dropdown(options=dataset_name_options[data['TASK']], value=data['DATASET_NAME'], description='DATASET:')
 dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
-hf_token_widget = widgets.Text(value=data.get('HF_TOKEN', ''), placeholder='Enter Hugging Face API Token', description='HF TOKEN:')
+hf_token_widget = widgets.Text(value='hf_YOUR_TOKEN_HERE', description='HF TOKEN:')
 
 
 # Additional options for advanced settings
@@ -53,7 +53,7 @@ learning_rate_widget = widgets.Dropdown(options=learning_rate_options, value=dat
 warmup_widget = widgets.Dropdown(options=warmup_options, value=data.get('WARMUP_STEPS', 500), description='WARMUP:')
 num_epochs_widget = widgets.Dropdown(options=num_epochs_options, value=data.get('NUM_EPOCHS', 1), description='EPOCHS:')
 push_to_hub_widget = widgets.Dropdown(options=push_to_hub_options, value=data.get('PUSH_TO_HUB', False), description='PUSH2HUB:')
-evaluation_strategy_widget = widgets.Dropdown(options=evaluation_strategy_options, value=data.get('EVALUATION_STRATEGY', 'epoch'), description='EVAL STRAT:')
+evaluation_strategy_widget = widgets.Dropdown(options=evaluation_strategy_options, value=data.get('EVALUATION_STRATEGY', 'epoch'), description='EVAL EVERY:')
 
 # Function to toggle advanced settings
 def toggle_advanced_settings(change):
@@ -130,7 +130,7 @@ output = widgets.Output()
 
 # Display widgets
 def config_yaml():
-    display(task_widget, base_model_name_widget, hf_token_widget, dataset_name_widget,
+    display(hf_token_widget,base_model_name_widget, task_widget, dataset_name_widget,
              dataset_config_name_widget, advanced_checkbox, save_button, output)
     
     if advanced_checkbox.value:
