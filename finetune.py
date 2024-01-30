@@ -2,14 +2,15 @@
 # Turn ON GPU
 # %%capture
 # !git clone https://github.com/nikitakapitan/nlphub.git
-# !mv nlphub/finetune.yaml .
-# !mkdir logs
 # !pip install datasets transformers evaluate accelerate 
+
+# %cd nlphub
+# !mkdir logs
+# !pip install .
+
 # from nlphub.vizual.colab_yaml import config_yaml
-
 # >>> Customize train.yaml
-
-# python nlphub/finetune.py --config finetune.yaml
+# python finetune.py --config finetune.yaml
 
 """
 train.py simply:

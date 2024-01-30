@@ -16,14 +16,40 @@ dataset_config_name_options = {
     'clinc_oos': ['plus', None],
     'imdb': [None],
 }
+
+# Define the available tasks
+task_options = ['text-classification', 'ner', 'question-answering']
+
+# Define dataset names and their corresponding configurations for each task
+dataset_name_catalogue = {
+    'text-classification': ['imdb', 'glue', 'clinc_oos'],
+    'ner': ['conll2003', 'ontonotes'],
+    'question-answering': ['squad', 'race'],
+}
+
+# Define dataset configurations for each dataset name
+dataset_config_name_catalogue = {
+    'imdb': [None],
+    'glue': ['cola', 'sst2', 'mrpc', 'mnli', 'qnli', 'qqp', 'rte', 'stsb', 'wnli', 'ax'],
+    'clinc_oos': ['plus', None],
+    'conll2003': ['eng', 'esp', 'ned'],
+    'ontonotes': ['english', 'chinese', 'arabic'],
+    'squad': ['v1', 'v2'],
+    'race': ['highschool', 'college'],
+}
+
 model_options = ['bert-base-uncased', 'distilbert-base-uncased']
 
+# Parse config
+dataset_name_options = dataset_name_catalogue[data['TASK']]
+dataset_config_name_options = dataset_config_name_catalogue[data['DATASET_NAME']]
+
 # Create widgets
-task_widget = widgets.Dropdown(options=task_options, value=data['TASK'], description='TASK:')
-base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
-dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data['DATASET_NAME'], description='DATASET:')
-dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
-hf_token_widget = widgets.Text(value=data.get('HF_TOKEN', ''), placeholder='Enter Hugging Face API Token', description='HF TOKEN:')
+task_widget = widgets.Dropdown(options=task_options, description='TASK:')
+base_model_name_widget = widgets.Dropdown(options=model_options, description='MODEL:')
+dataset_name_widget = widgets.Dropdown(options=dataset_name_options, description='DATASET:')
+dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options, description='DATA CFG:')
+hf_token_widget = widgets.Text(description='HF TOKEN:')
 
 
 # Additional options for advanced settings
