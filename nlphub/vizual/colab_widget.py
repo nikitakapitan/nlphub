@@ -63,6 +63,10 @@ def toggle_advanced_settings(change):
         clear_output()
         config_yaml()
 
+# Update function for TASK change
+def update_dataset_name_options(*args):
+    dataset_name_widget.options = dataset_name_options[task_widget.value]
+
 # Update function for DATASET_NAME change
 def update_dataset_config_name_options(*args):
     dataset_config_name_widget.options = dataset_config_name_options[dataset_name_widget.value]
@@ -81,6 +85,10 @@ def update_metrics():
             {'accuracy': {}},
             {'f1': {'average': 'weighted'}}
         ]
+
+
+# Observe changes in TASK
+task_widget.observe(update_dataset_name_options, 'value')
 
 # Observe changes in DATASET_NAME
 dataset_name_widget.observe(update_dataset_config_name_options, 'value')
