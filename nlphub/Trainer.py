@@ -1,11 +1,15 @@
+"""
+Trainer prepares the training:
+- it logins into HF token
+- it defines the type of task (classification, qa, NER etc)
+- it loads the data and preprocess it
+- it init the tokenizer and the model.to(device)
+- it creates function compute_metrics_func (to be passed to hf.Trainer)
+"""
+from huggingface_hub import login
 from abc import ABC, abstractclassmethod
-
-import os
 import yaml
-import argparse
 import logging
-import time
-
 from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
@@ -17,15 +21,16 @@ class Trainer(ABC):
     def __init__(self, config):
 
         self.config = config
-        self.setup()            # logging, self.AutoModelClass, self.device
-        self.load_dataset()     # self.dataset, self.num_classes
-        self.init_tokenizer()   # self.tokenizer
-        self.init_model()       # self.model
-        self.define_compute_metrics()  # self.compute_metrics_func
+        self.setup()                    # Objects created: self.AutoModelClass, self.device
+        self.load_dataset()             # Objects created: self.dataset, self.num_classes
+        self.init_tokenizer()           # Objects created: self.tokenizer
+        self.init_model()               # Objects created: self.model
+        self.define_compute_metrics()   # Objects created: self.compute_metrics_func
 
     def setup(self):
         logging.info("Input Configurations:")
         logging.info(yaml.dump(self.config))
+        login(self.config['HF_TOKEN'])
 
         # Task To AutoClass:
         self.AutoModelClass = {

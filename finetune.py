@@ -1,17 +1,22 @@
 # Colab:
 # Turn ON GPU
-
-#%%capture
-#!git clone https://github.com/nikitakapitan/nlphub.git
-#!mv nlphub/train.yaml .
-#!mkdir logs
-#!pip install datasets transformers evaluate accelerate 
-# from huggingface_hub import login
-# login("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")
+# %%capture
+# !git clone https://github.com/nikitakapitan/nlphub.git
+# !mv nlphub/finetune.yaml .
+# !mkdir logs
+# !pip install datasets transformers evaluate accelerate 
+# from nlphub.vizual.colab_yaml import config_yaml
 
 # >>> Customize train.yaml
 
-# python nlphub/train.py --config train.yaml
+# python nlphub/finetune.py --config finetune.yaml
+
+"""
+train.py simply:
+- init FineTuner(config) : which defines task, data, tokenizer, model and metrics
+- create hf.TrainingArgs and hf.Trainer
+- train, evaluate, push_to_hub
+"""
  
 import os
 import yaml
@@ -31,10 +36,10 @@ def main(args):
 
     with open(args, 'r') as f:
         config = yaml.safe_load(f)
-    finetuner = FineTuner(config)
 
-    # TOKENIZE
-    # finetuner.tokenizer = AutoTokenizer.from_pretrained(config['BASE_MODEL_NAME'])
+    # define task, data, tokenizer, model and metrics:
+    finetuner = FineTuner(config) 
+
     tokenize = lambda batch: finetuner.tokenizer(batch['text'], padding='max_length', truncation=True)
     dataset_encoded = finetuner.dataset.map(tokenize, batched=True)
 

@@ -1,3 +1,14 @@
+"""
+FineTuner prepares the fine-tuning.
+
+First, the parents class Trainer:
+- defines the type of task, loads the data, 
+- init tokenizer and the model and defines metrics to compute
+
+FineTuner ONLY overwrites define_compute_metrics to
+=> re-define compute_metrics_func with accuracy and f1_score
+"""
+
 from nlphub import Trainer
 import logging
 import evaluate

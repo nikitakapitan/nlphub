@@ -23,6 +23,8 @@ task_widget = widgets.Dropdown(options=task_options, value=data['TASK'], descrip
 base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
 dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data['DATASET_NAME'], description='DATASET:')
 dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
+hf_token_widget = widgets.Text(value=data.get('HF_TOKEN', ''), placeholder='Enter Hugging Face API Token', description='HF TOKEN:')
+
 
 # Additional options for advanced settings
 num_epochs_options = [1, 2, 3, 5, 10, 100]
@@ -85,6 +87,7 @@ def save_changes(b):
     data['DATASET_NAME'] = dataset_name_widget.value
     data['DATASET_CONFIG_NAME'] = dataset_config_name_widget.value
     data['BASE_MODEL_NAME'] = base_model_name_widget.value
+    data['HF_TOKEN'] = hf_token_widget.value 
     if advanced_checkbox.value:
         data['NUM_EPOCHS'] = num_epochs_widget.value
         data['BATCH_SIZE'] = batch_size_widget.value
@@ -110,7 +113,8 @@ output = widgets.Output()
 
 # Display widgets
 def config_yaml():
-    display(task_widget, base_model_name_widget, dataset_name_widget, dataset_config_name_widget, advanced_checkbox, save_button, output)
+    display(task_widget, base_model_name_widget, hf_token_widget, dataset_name_widget,
+             dataset_config_name_widget, advanced_checkbox, save_button, output)
     
     if advanced_checkbox.value:
         display(num_epochs_widget, weight_decay_widget, learning_rate_widget, push_to_hub_widget, evaluation_strategy_widget)
