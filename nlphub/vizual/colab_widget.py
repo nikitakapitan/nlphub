@@ -40,16 +40,27 @@ dataset_config_name_catalogue = {
 
 model_options = ['bert-base-uncased', 'distilbert-base-uncased']
 
-# Parse config
-dataset_name_options = dataset_name_catalogue[data['TASK']]
-dataset_config_name_options = dataset_config_name_catalogue[data['DATASET_NAME']]
-
 # Create widgets
 task_widget = widgets.Dropdown(options=task_options, description='TASK:')
 base_model_name_widget = widgets.Dropdown(options=model_options, description='MODEL:')
-dataset_name_widget = widgets.Dropdown(options=dataset_name_options, description='DATASET:')
-dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options, description='DATA CFG:')
+dataset_name_widget = widgets.Dropdown(description='DATASET:')
+dataset_config_name_widget = widgets.Dropdown(description='DATA CFG:')
 hf_token_widget = widgets.Text(description='HF TOKEN:')
+
+# Function to update dataset name options based on the selected task
+def update_dataset_name_options(change):
+    selected_task = change.new
+    dataset_name_widget.options = dataset_name_catalogue.get(selected_task, [])
+    dataset_config_name_widget.options = []
+
+# Function to update dataset config options based on the selected dataset name
+def update_dataset_config_options(change):
+    selected_dataset_name = change.new
+    dataset_config_name_widget.options = dataset_config_name_catalogue.get(selected_dataset_name, [])
+
+# Add observers to task_widget and dataset_name_widget
+task_widget.observe(update_dataset_name_options, 'value')
+dataset_name_widget.observe(update_dataset_config_options, 'value')
 
 
 # Additional options for advanced settings
