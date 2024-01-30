@@ -10,11 +10,19 @@ with open(yaml_file) as file:
 
 # Define the options for the widgets
 task_options = ['text-classification', 'ner', 'question-answering']
-dataset_name_options = ['imdb', 'glue', 'clinc_oos']
+dataset_name_options = {
+    'text-classification': ['imdb', 'glue', 'clinc_oos'],
+    'ner': ['conll2003', 'ontonotes'],
+    'question-answering': ['squad', 'race'],
+}
 dataset_config_name_options = {
+    'imdb': [None],
     'glue': ['cola', 'sst2', 'mrpc', 'mnli', 'qnli', 'qqp', 'rte', 'stsb', 'wnli', 'ax'],
     'clinc_oos': ['plus', None],
-    'imdb': [None],
+    'conll2003': ['eng', 'esp', 'ned'],
+    'ontonotes': ['english', 'chinese', 'arabic'],
+    'squad': ['v1', 'v2'],
+    'race': ['highschool', 'college'],
 }
 
 model_options = ['bert-base-uncased', 'distilbert-base-uncased']
@@ -22,7 +30,7 @@ model_options = ['bert-base-uncased', 'distilbert-base-uncased']
 # Create widgets
 task_widget = widgets.Dropdown(options=task_options, value=data['TASK'], description='TASK:')
 base_model_name_widget = widgets.Dropdown(options=model_options, value=data['BASE_MODEL_NAME'], description='MODEL:')
-dataset_name_widget = widgets.Dropdown(options=dataset_name_options, value=data['DATASET_NAME'], description='DATASET:')
+dataset_name_widget = widgets.Dropdown(options=dataset_name_options[data['TASK']], value=data['DATASET_NAME'], description='DATASET:')
 dataset_config_name_widget = widgets.Dropdown(options=dataset_config_name_options[data['DATASET_NAME']], value=data['DATASET_CONFIG_NAME'], description='DATA CFG:')
 hf_token_widget = widgets.Text(value=data.get('HF_TOKEN', ''), placeholder='Enter Hugging Face API Token', description='HF TOKEN:')
 

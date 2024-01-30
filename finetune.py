@@ -44,9 +44,11 @@ def main(args):
     tokenize = lambda batch: finetuner.tokenizer(batch['text'], padding='max_length', truncation=True)
     dataset_encoded = finetuner.dataset.map(tokenize, batched=True)
 
+    cfg_dir = f'_{config["DATASET_CONFIG_NAME"]}' if config["DATASET_CONFIG_NAME"] else ''
+    
     # Training Arguments
     training_args = TrainingArguments(
-        output_dir=f'{config["BASE_MODEL_NAME"]}-finetuned-{config["DATASET_NAME"]}_{config["DATASET_CONFIG_NAME"]}',
+        output_dir=f'{config["BASE_MODEL_NAME"]}-finetuned-{config["DATASET_NAME"]}{cfg_dir}',
         num_train_epochs=config['NUM_EPOCHS'],
         learning_rate=config['LEARNING_RATE'],
         per_device_train_batch_size=config['BATCH_SIZE'],
